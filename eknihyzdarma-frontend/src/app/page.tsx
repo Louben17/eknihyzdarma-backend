@@ -148,29 +148,14 @@ export default async function Home() {
     banners = bannersRes.data || [];
   } catch {}
 
-  // Build carousel slides: Strapi banners first, then fallback to books
-  let carouselSlides: CarouselSlide[];
-
-  if (banners.length > 0) {
-    carouselSlides = banners.map((banner) => ({
-      id: banner.id,
-      image: getStrapiImageUrl(banner.image),
-      title: banner.title,
-      subtitle: banner.subtitle,
-      href: banner.link,
-    }));
-  } else {
-    carouselSlides = popularBooks
-      .filter((book) => book.cover)
-      .slice(0, 5)
-      .map((book) => ({
-        id: book.id,
-        image: getStrapiImageUrl(book.cover),
-        title: book.title,
-        subtitle: book.author?.name,
-        href: `/kniha/${book.slug}`,
-      }));
-  }
+  // Build carousel slides only from Strapi banners
+  const carouselSlides: CarouselSlide[] = banners.map((banner) => ({
+    id: banner.id,
+    image: getStrapiImageUrl(banner.image),
+    title: banner.title,
+    subtitle: banner.subtitle,
+    href: banner.link,
+  }));
 
   return (
     <AppLayout>
