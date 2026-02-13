@@ -40,10 +40,22 @@ export interface Book {
   slug: string;
   description?: string;
   isFree: boolean;
+  downloads: number;
   cover?: StrapiImage;
   ebookFiles?: StrapiFile[];
   author?: Author;
   category?: Category;
+}
+
+export interface Banner {
+  id: number;
+  documentId: string;
+  title: string;
+  subtitle?: string;
+  image: StrapiImage;
+  link: string;
+  order: number;
+  active: boolean;
 }
 
 export interface StrapiResponse<T> {

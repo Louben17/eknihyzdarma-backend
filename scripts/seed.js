@@ -12,7 +12,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const FormData = require('form-data');
 
 // --------------- Configuration ---------------
 
@@ -220,15 +219,13 @@ async function strapiRequest(endpoint, method = 'GET', body = null) {
   const url = `${STRAPI_URL}/api${endpoint}`;
   const headers = {
     'Authorization': `Bearer ${STRAPI_TOKEN}`,
+    'Content-Type': 'application/json',
   };
 
   const options = { method, headers };
 
-  if (body && !(body instanceof FormData)) {
-    headers['Content-Type'] = 'application/json';
+  if (body) {
     options.body = JSON.stringify(body);
-  } else if (body instanceof FormData) {
-    options.body = body;
   }
 
   const response = await fetch(url, options);
@@ -241,19 +238,29 @@ async function strapiRequest(endpoint, method = 'GET', body = null) {
   return response.json();
 }
 
-async function uploadFile(filePath, refModel = null, refId = null, field = null) {
+function getMimeType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  const mimes = {
+    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+    '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml',
+    '.epub': 'application/epub+zip', '.mobi': 'application/x-mobipocket-ebook',
+    '.pdf': 'application/pdf',
+  };
+  return mimes[ext] || 'application/octet-stream';
+}
+
+async function uploadFile(filePath) {
   if (!fs.existsSync(filePath)) {
     console.log(`    File not found: ${filePath}`);
     return null;
   }
 
-  const form = new FormData();
-  form.append('files', fs.createReadStream(filePath));
-  if (refModel && refId && field) {
-    form.append('ref', refModel);
-    form.append('refId', String(refId));
-    form.append('field', field);
-  }
+  const fileBuffer = fs.readFileSync(filePath);
+  const fileName = path.basename(filePath);
+  const mimeType = getMimeType(filePath);
+
+  const formData = new FormData();
+  formData.append('files', new Blob([fileBuffer], { type: mimeType }), fileName);
 
   const url = `${STRAPI_URL}/api/upload`;
   const response = await fetch(url, {
@@ -261,12 +268,12 @@ async function uploadFile(filePath, refModel = null, refId = null, field = null)
     headers: {
       'Authorization': `Bearer ${STRAPI_TOKEN}`,
     },
-    body: form,
+    body: formData,
   });
 
   if (!response.ok) {
     const text = await response.text();
-    console.log(`    Upload failed for ${filePath}: ${text}`);
+    console.log(`    Upload failed for ${fileName}: ${text.substring(0, 200)}`);
     return null;
   }
 
@@ -358,7 +365,7 @@ async function seed() {
   // ===== 1. Create Categories =====
   console.log('\n--- Creating Categories ---');
   const uniqueCategories = [...new Set(xmlBooks.map(b => b.categoryName).filter(Boolean))];
-  const categoryMap = new Map(); // name → strapi ID
+  const categoryMap = new Map(); // name → strapi documentId
 
   for (const catName of uniqueCategories) {
     const slug = slugify(catName);
@@ -366,9 +373,9 @@ async function seed() {
       const result = await strapiRequest('/categories', 'POST', {
         data: { name: catName.trim(), slug }
       });
-      const strapiId = result.data.id;
-      categoryMap.set(catName.trim(), strapiId);
-      console.log(`  Created category: "${catName}" (ID: ${strapiId})`);
+      const docId = result.data.documentId;
+      categoryMap.set(catName.trim(), docId);
+      console.log(`  Created category: "${catName}" (docId: ${docId})`);
     } catch (err) {
       console.log(`  Failed to create category "${catName}": ${err.message}`);
     }
@@ -376,12 +383,10 @@ async function seed() {
 
   // ===== 2. Create Authors =====
   console.log('\n--- Creating Authors ---');
-  // Collect unique authors from XML books, then enrich from .dat
   const uniqueAuthors = [...new Set(xmlBooks.map(b => b.manufacturer).filter(Boolean))];
-  const authorStrapiMap = new Map(); // author name → strapi ID
+  const authorStrapiMap = new Map(); // author name → strapi documentId
 
   // Build reverse map: author name (from XML) → znacka ID
-  // We match via product: for each XML book, find its product in .dat, get znacka_id
   const authorNameToZnackaId = new Map();
   for (const xmlBook of xmlBooks) {
     const prod = produktMap.get(xmlBook.id);
@@ -391,7 +396,7 @@ async function seed() {
   }
 
   for (const authorName of uniqueAuthors) {
-    if (!authorName || authorName === 'VISIBILITY') continue; // skip junk entries
+    if (!authorName || authorName === 'VISIBILITY') continue;
 
     const znackaId = authorNameToZnackaId.get(authorName);
     const znacka = znackaId ? znackaMap.get(znackaId) : null;
@@ -403,9 +408,9 @@ async function seed() {
       const result = await strapiRequest('/authors', 'POST', {
         data: { name: authorName.trim(), slug, bio: bio.substring(0, 10000) }
       });
-      const strapiId = result.data.id;
-      authorStrapiMap.set(authorName, strapiId);
-      console.log(`  Created author: "${authorName}" (ID: ${strapiId}, znacka: ${znackaId || 'N/A'})`);
+      const docId = result.data.documentId;
+      authorStrapiMap.set(authorName, docId);
+      console.log(`  Created author: "${authorName}" (docId: ${docId}, znacka: ${znackaId || 'N/A'})`);
 
       // Upload author photo from znacka folder
       if (znacka?.obrazek) {
@@ -413,8 +418,7 @@ async function seed() {
         if (fs.existsSync(photoPath)) {
           const uploaded = await uploadFile(photoPath);
           if (uploaded) {
-            // Link the uploaded file to the author
-            await strapiRequest(`/authors/${strapiId}`, 'PUT', {
+            await strapiRequest(`/authors/${docId}`, 'PUT', {
               data: { photo: uploaded.id }
             });
             console.log(`    Uploaded photo: ${znacka.obrazek}`);
@@ -436,12 +440,11 @@ async function seed() {
     const prod = produktMap.get(xmlBook.id);
     const detail = produktDetailMap.get(xmlBook.id);
 
-    // Use XML description first, fall back to .dat
     let description = xmlBook.description || detail?.popis || '';
 
     const slug = prod?.url || slugify(xmlBook.title);
-    const authorStrapiId = authorStrapiMap.get(xmlBook.manufacturer) || null;
-    const categoryStrapiId = categoryMap.get(xmlBook.categoryName?.trim()) || null;
+    const authorDocId = authorStrapiMap.get(xmlBook.manufacturer) || null;
+    const categoryDocId = categoryMap.get(xmlBook.categoryName?.trim()) || null;
 
     try {
       const bookData = {
@@ -450,25 +453,18 @@ async function seed() {
         description: description.substring(0, 50000),
         isFree: true,
       };
-      if (authorStrapiId) bookData.author = authorStrapiId;
-      if (categoryStrapiId) bookData.category = categoryStrapiId;
+      if (authorDocId) bookData.author = authorDocId;
+      if (categoryDocId) bookData.category = categoryDocId;
 
       const result = await strapiRequest('/books', 'POST', {
         data: bookData
       });
-      const bookStrapiId = result.data.id;
+      const bookDocId = result.data.documentId;
       bookCount++;
 
-      // Publish the book
-      await strapiRequest(`/books/${bookStrapiId}`, 'PUT', {
-        data: { publishedAt: new Date().toISOString() }
-      });
-
-      console.log(`  [${bookCount}/${xmlBooks.length}] Created book: "${xmlBook.title}" (ID: ${bookStrapiId})`);
+      console.log(`  [${bookCount}/${xmlBooks.length}] Created book: "${xmlBook.title}" (docId: ${bookDocId})`);
 
       // Upload book cover
-      // The cover image filename matches the ID from the old system
-      // Try full size first, then regular
       const imgId = xmlBook.imgUrl ? path.basename(xmlBook.imgUrl, path.extname(xmlBook.imgUrl)) : xmlBook.id;
       let coverPath = path.join(FILES_DIR, 'mod_eshop', 'produkty', 'full', `${imgId}.jpg`);
       if (!fs.existsSync(coverPath)) {
@@ -477,7 +473,7 @@ async function seed() {
       if (fs.existsSync(coverPath)) {
         const uploaded = await uploadFile(coverPath);
         if (uploaded) {
-          await strapiRequest(`/books/${bookStrapiId}`, 'PUT', {
+          await strapiRequest(`/books/${bookDocId}`, 'PUT', {
             data: { cover: uploaded.id }
           });
           console.log(`    Uploaded cover: ${path.basename(coverPath)}`);
@@ -499,11 +495,16 @@ async function seed() {
           }
         }
         if (uploadedIds.length > 0) {
-          await strapiRequest(`/books/${bookStrapiId}`, 'PUT', {
+          await strapiRequest(`/books/${bookDocId}`, 'PUT', {
             data: { ebookFiles: uploadedIds }
           });
         }
       }
+
+      // Publish the book (must be last, after all media attached)
+      await strapiRequest(`/books/${bookDocId}`, 'PUT', {
+        data: { publishedAt: new Date().toISOString() }
+      });
     } catch (err) {
       console.log(`  Failed to create book "${xmlBook.title}": ${err.message}`);
     }

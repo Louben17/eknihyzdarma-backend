@@ -50,6 +50,10 @@
       "relation": "manyToOne",
       "target": "api::category.category",
       "inversedBy": "books"
+    },
+    "downloads": {
+      "type": "integer",
+      "default": 0
     }
   }
 }
