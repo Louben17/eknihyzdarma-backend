@@ -102,6 +102,12 @@ node_modules
 coverage
 
 ############################
+# Legacy PHP data (local only, not for git)
+############################
+
+eknihyzdarma/
+
+############################
 # Strapi
 ############################
 
