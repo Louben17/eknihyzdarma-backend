@@ -97,17 +97,17 @@ export default async function Home() {
   } catch {}
 
   try {
-    const featuredRes = await getFeaturedBooks(6);
+    const featuredRes = await getFeaturedBooks(5);
     featuredBooks = featuredRes.data || [];
   } catch {}
 
   try {
-    const popularRes = await getMostDownloadedBooks(6);
+    const popularRes = await getMostDownloadedBooks(5);
     popularBooks = popularRes.data || [];
   } catch {}
 
   try {
-    const newestRes = await getNewestBooks(6);
+    const newestRes = await getNewestBooks(5);
     newestBooks = newestRes.data || [];
   } catch {}
 
@@ -171,7 +171,7 @@ export default async function Home() {
                   Nejoblíbenější
                 </h2>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                 {featuredBooks.map((book) => (
                   <BookCard key={book.id} book={book} />
                 ))}
@@ -188,7 +188,7 @@ export default async function Home() {
                   Nejstahovanější
                 </h2>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                 {popularBooks.map((book) => (
                   <BookCard key={book.id} book={book} />
                 ))}
@@ -205,7 +205,7 @@ export default async function Home() {
                   Nejnovější
                 </h2>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                 {newestBooks.map((book) => (
                   <BookCard key={book.id} book={book} />
                 ))}
