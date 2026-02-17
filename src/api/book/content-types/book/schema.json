@@ -54,6 +54,10 @@
     "downloads": {
       "type": "integer",
       "default": 0
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

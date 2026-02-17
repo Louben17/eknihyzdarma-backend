@@ -41,6 +41,7 @@ export interface Book {
   description?: string;
   isFree: boolean;
   downloads: number;
+  isFeatured: boolean;
   cover?: StrapiImage;
   ebookFiles?: StrapiFile[];
   author?: Author;

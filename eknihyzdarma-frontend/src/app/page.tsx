@@ -4,15 +4,16 @@ import AppLayout from "@/components/app-layout";
 import { Badge } from "@/components/ui/badge";
 import HeroCarousel, { type CarouselSlide } from "@/components/hero-carousel";
 import {
-  getBooks,
   getCategories,
   getMostDownloadedBooks,
+  getFeaturedBooks,
+  getNewestBooks,
   getTopAuthors,
   getBanners,
   getStrapiImageUrl,
 } from "@/lib/api";
 import type { Book, Author, Banner } from "@/lib/types";
-import { Download, TrendingUp } from "lucide-react";
+import { Download, Star, TrendingUp, Clock } from "lucide-react";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
@@ -42,44 +43,13 @@ function BookCard({ book }: { book: Book }) {
           <p className="text-xs text-gray-500 mt-0.5">
             {book.author?.name || "Neznámý autor"}
           </p>
+          {book.downloads > 0 && (
+            <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+              <Download className="h-3 w-3" />
+              {book.downloads.toLocaleString("cs-CZ")} stažení
+            </p>
+          )}
         </div>
-      </div>
-    </Link>
-  );
-}
-
-function SmallBookCard({ book, rank }: { book: Book; rank: number }) {
-  const coverUrl = getStrapiImageUrl(book.cover);
-
-  return (
-    <Link href={`/kniha/${book.slug}`} className="flex items-center gap-3 group py-2">
-      <span className="text-lg font-bold text-gray-300 w-6 text-center flex-shrink-0">
-        {rank}
-      </span>
-      <div className="w-10 h-14 rounded overflow-hidden bg-gray-100 flex-shrink-0">
-        {coverUrl ? (
-          <Image
-            src={coverUrl}
-            alt={book.title}
-            width={40}
-            height={56}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-200" />
-        )}
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
-          {book.title}
-        </p>
-        <p className="text-xs text-gray-500">{book.author?.name}</p>
-        {book.downloads > 0 && (
-          <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
-            <Download className="h-3 w-3" />
-            {book.downloads}
-          </p>
-        )}
       </div>
     </Link>
   );
@@ -114,29 +84,32 @@ function AuthorCard({ author }: { author: Author }) {
 }
 
 export default async function Home() {
-  let books: Book[] = [];
   let categories: { name: string; slug: string }[] = [];
+  let featuredBooks: Book[] = [];
   let popularBooks: Book[] = [];
+  let newestBooks: Book[] = [];
   let topAuthors: Author[] = [];
   let banners: Banner[] = [];
 
   try {
-    const [booksRes, catsRes] = await Promise.all([
-      getBooks(1, 300),
-      getCategories(),
-    ]);
-    books = booksRes.data || [];
+    const catsRes = await getCategories();
     categories = catsRes.data || [];
-  } catch (error) {
-    console.error("Failed to fetch books/categories:", error);
-  }
+  } catch {}
 
   try {
-    const popularRes = await getMostDownloadedBooks(10);
+    const featuredRes = await getFeaturedBooks(6);
+    featuredBooks = featuredRes.data || [];
+  } catch {}
+
+  try {
+    const popularRes = await getMostDownloadedBooks(6);
     popularBooks = popularRes.data || [];
-  } catch {
-    popularBooks = books.slice(0, 10);
-  }
+  } catch {}
+
+  try {
+    const newestRes = await getNewestBooks(6);
+    newestBooks = newestRes.data || [];
+  } catch {}
 
   try {
     const authorsRes = await getTopAuthors(8);
@@ -189,7 +162,24 @@ export default async function Home() {
             ))}
           </div>
 
-          {/* Most downloaded section */}
+          {/* Featured books */}
+          {featuredBooks.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Star className="h-5 w-5 text-yellow-500" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Nejoblíbenější
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {featuredBooks.map((book) => (
+                  <BookCard key={book.id} book={book} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Most downloaded */}
           {popularBooks.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -199,32 +189,29 @@ export default async function Home() {
                 </h2>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                {popularBooks.slice(0, 6).map((book) => (
+                {popularBooks.map((book) => (
                   <BookCard key={book.id} book={book} />
                 ))}
               </div>
             </div>
           )}
 
-          {/* All books */}
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Všechny knihy
-              <span className="text-sm font-normal text-gray-500 ml-2">
-                ({books.length})
-              </span>
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {books.map((book) => (
-                <BookCard key={book.id} book={book} />
-              ))}
+          {/* Newest books */}
+          {newestBooks.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Clock className="h-5 w-5 text-green-500" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Nejnovější
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {newestBooks.map((book) => (
+                  <BookCard key={book.id} book={book} />
+                ))}
+              </div>
             </div>
-            {books.length === 0 && (
-              <p className="text-gray-500 text-center py-12">
-                Zatím nejsou k dispozici žádné knihy.
-              </p>
-            )}
-          </div>
+          )}
         </div>
 
         {/* Right sidebar */}
@@ -249,41 +236,21 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Most downloaded list */}
-          {popularBooks.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
-                Nejstahovanější knihy
-              </h3>
-              <div className="divide-y divide-gray-100">
-                {popularBooks.slice(0, 5).map((book, i) => (
-                  <SmallBookCard key={book.id} book={book} rank={i + 1} />
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Categories */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
               Kategorie
             </h3>
             <div className="space-y-1">
-              {categories.map((cat) => {
-                const count = books.filter(
-                  (b) => b.category?.slug === cat.slug
-                ).length;
-                return (
-                  <Link
-                    key={cat.slug}
-                    href={`/kategorie/${cat.slug}`}
-                    className="flex items-center justify-between py-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors"
-                  >
-                    <span>{cat.name}</span>
-                    <span className="text-xs text-gray-400">{count}</span>
-                  </Link>
-                );
-              })}
+              {categories.map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/kategorie/${cat.slug}`}
+                  className="flex items-center justify-between py-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  <span>{cat.name}</span>
+                </Link>
+              ))}
             </div>
           </div>
         </aside>
