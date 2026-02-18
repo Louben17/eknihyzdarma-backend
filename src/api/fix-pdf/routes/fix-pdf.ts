@@ -9,5 +9,14 @@ export default {
         middlewares: [],
       },
     },
+    {
+      method: 'PUT',
+      path: '/fix-pdf/update',
+      handler: 'fix-pdf.update',
+      config: {
+        auth: false,
+        middlewares: [],
+      },
+    },
   ],
 };
