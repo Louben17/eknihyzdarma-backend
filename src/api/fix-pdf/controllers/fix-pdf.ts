@@ -4,10 +4,9 @@
  * Problem: PDFs uploaded via Strapi Cloudinary provider get resource_type 'image'
  * which blocks delivery (401). This re-uploads them as 'raw'.
  *
- * Uses signed Cloudinary URLs to access the blocked image-type PDFs,
- * re-uploads them as raw, updates DB records, and cleans up old resources.
+ * Strategy: Use Cloudinary Admin API to download the PDF bytes directly,
+ * then re-upload as resource_type 'raw'.
  */
-import type { Core } from '@strapi/strapi';
 
 // @ts-ignore - cloudinary is installed as dependency of the upload provider
 import cloudinary from 'cloudinary';
@@ -53,6 +52,7 @@ export default {
     );
 
     const results: any[] = [];
+    let processed = 0;
 
     for (const file of pdfImageFiles) {
       const oldPublicId = file.provider_metadata?.public_id;
@@ -62,18 +62,27 @@ export default {
       }
 
       try {
-        // Generate a signed URL to access the blocked PDF
-        const signedUrl = cloudinary.v2.url(oldPublicId + '.pdf', {
+        // Use Cloudinary Admin API to get the resource details
+        const resource = await cloudinary.v2.api.resource(oldPublicId, {
           resource_type: 'image',
-          type: 'upload',
-          sign_url: true,
         });
 
-        // New public_id for raw resource (keep same hash but add extension)
+        // Use private_download_url to get an authenticated download URL
+        // This bypasses the CDN delivery restrictions
+        const downloadUrl = cloudinary.v2.utils.private_download_url(
+          oldPublicId,
+          'pdf',
+          {
+            resource_type: 'image',
+            expires_at: Math.floor(Date.now() / 1000) + 3600,
+          }
+        );
+
+        // New public_id for raw resource
         const newPublicId = file.hash;
 
-        // Upload from signed URL to Cloudinary as raw
-        const uploadResult = await cloudinary.v2.uploader.upload(signedUrl, {
+        // Upload from the private download URL to Cloudinary as raw
+        const uploadResult = await cloudinary.v2.uploader.upload(downloadUrl, {
           resource_type: 'raw',
           public_id: newPublicId,
           overwrite: true,
@@ -99,14 +108,14 @@ export default {
             resource_type: 'image',
           });
         } catch (e) {
-          // Non-critical - old resource will just sit there
+          // Non-critical
         }
 
+        processed++;
         results.push({
           id: file.id,
           name: file.name,
           status: 'fixed',
-          oldUrl: file.url,
           newUrl,
         });
       } catch (err: any) {
@@ -114,7 +123,7 @@ export default {
           id: file.id,
           name: file.name,
           status: 'error',
-          error: err.message,
+          error: err.message?.substring(0, 200),
         });
       }
     }
@@ -126,7 +135,8 @@ export default {
       total: pdfImageFiles.length,
       fixed,
       errors,
-      results,
+      results: results.slice(0, 20), // Limit output size
+      remaining: results.length > 20 ? results.length - 20 : 0,
     };
   },
 };
