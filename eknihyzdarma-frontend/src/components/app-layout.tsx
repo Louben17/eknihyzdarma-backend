@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Search, Home, Users, Grid3X3, BookOpen, Newspaper } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Footer from "@/components/footer";
 
 const navItems = [
   { href: "/", label: "Knihy", icon: Home },
@@ -63,9 +64,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto p-8">
-          {children}
+        {/* Page Content + Footer */}
+        <main className="flex-1 overflow-auto flex flex-col">
+          <div className="flex-1 p-8">
+            {children}
+          </div>
+          <Footer />
         </main>
       </div>
     </div>
