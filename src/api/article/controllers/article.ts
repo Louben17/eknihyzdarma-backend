@@ -14,9 +14,8 @@ export default factories.createCoreController('api::article.article', ({ strapi 
 
     await strapi.documents('api::article.article').update({
       documentId: id,
-      data: {
-        views: (article.views || 0) + 1,
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: { views: (article.views || 0) + 1 } as any,
     });
 
     ctx.body = { success: true };
