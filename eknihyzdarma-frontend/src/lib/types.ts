@@ -59,6 +59,19 @@ export interface Banner {
   active: boolean;
 }
 
+export interface Article {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  perex?: string;
+  content?: string;
+  cover?: StrapiImage;
+  views: number;
+  publishedAt: string;
+  createdAt: string;
+}
+
 export interface StrapiResponse<T> {
   data: T;
   meta: {

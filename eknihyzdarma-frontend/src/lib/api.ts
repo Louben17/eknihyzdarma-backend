@@ -1,4 +1,4 @@
-import type { Book, Author, Category, Banner, StrapiResponse } from './types';
+import type { Book, Author, Category, Banner, Article, StrapiResponse } from './types';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://eknihyzdarma-backend-1.onrender.com';
 
@@ -70,6 +70,22 @@ export async function getBanners(): Promise<StrapiResponse<Banner[]>> {
 export function getStrapiFileUrl(url: string): string {
   if (url.startsWith('http')) return url;
   return `${STRAPI_URL}${url}`;
+}
+
+export async function getArticles(page = 1, pageSize = 10): Promise<StrapiResponse<Article[]>> {
+  return fetchApi(`/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort=publishedAt:desc`);
+}
+
+export async function getArticleBySlug(slug: string): Promise<StrapiResponse<Article[]>> {
+  return fetchApi(`/articles?filters[slug][$eq]=${slug}&populate=cover`);
+}
+
+export async function getNewestArticles(limit = 2): Promise<StrapiResponse<Article[]>> {
+  return fetchApi(`/articles?populate=cover&pagination[pageSize]=${limit}&sort=publishedAt:desc`);
+}
+
+export async function getMostReadArticles(limit = 5): Promise<StrapiResponse<Article[]>> {
+  return fetchApi(`/articles?populate=cover&pagination[pageSize]=${limit}&sort=views:desc`);
 }
 
 export { STRAPI_URL };

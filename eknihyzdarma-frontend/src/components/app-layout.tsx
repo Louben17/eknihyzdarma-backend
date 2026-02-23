@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, Home, Users, Grid3X3, BookOpen } from "lucide-react";
+import { Search, Home, Users, Grid3X3, BookOpen, Newspaper } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/", label: "Knihy", icon: Home },
   { href: "/kategorie", label: "Kategorie", icon: Grid3X3 },
   { href: "/autori", label: "Autoři", icon: Users },
+  { href: "/aktuality", label: "Aktuality", icon: Newspaper },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

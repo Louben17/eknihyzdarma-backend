@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import AppLayout from "@/components/app-layout";
+import ArticleBanners from "@/components/article-banners";
 import { Badge } from "@/components/ui/badge";
 import HeroCarousel, { type CarouselSlide } from "@/components/hero-carousel";
 import {
@@ -10,10 +11,12 @@ import {
   getNewestBooks,
   getTopAuthors,
   getBanners,
+  getNewestArticles,
+  getMostReadArticles,
   getStrapiImageUrl,
 } from "@/lib/api";
-import type { Book, Author, Banner } from "@/lib/types";
-import { Download, Star, TrendingUp, Clock } from "lucide-react";
+import type { Book, Author, Banner, Article } from "@/lib/types";
+import { Download, Star, TrendingUp, Clock, Eye, Newspaper } from "lucide-react";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
@@ -83,6 +86,30 @@ function AuthorCard({ author }: { author: Author }) {
   );
 }
 
+function MostReadArticleItem({ article, rank }: { article: Article; rank: number }) {
+  return (
+    <Link
+      href={`/aktuality/${article.slug}`}
+      className="flex items-start gap-2 py-2 group"
+    >
+      <span className="text-lg font-bold text-gray-200 leading-none w-5 shrink-0 select-none">
+        {rank}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
+          {article.title}
+        </p>
+        {article.views > 0 && (
+          <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+            <Eye className="h-3 w-3" />
+            {article.views} zobrazení
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
 export default async function Home() {
   let categories: { name: string; slug: string }[] = [];
   let featuredBooks: Book[] = [];
@@ -90,6 +117,8 @@ export default async function Home() {
   let newestBooks: Book[] = [];
   let topAuthors: Author[] = [];
   let banners: Banner[] = [];
+  let newestArticles: Article[] = [];
+  let mostReadArticles: Article[] = [];
 
   try {
     const catsRes = await getCategories();
@@ -121,7 +150,16 @@ export default async function Home() {
     banners = bannersRes.data || [];
   } catch {}
 
-  // Build carousel slides only from Strapi banners
+  try {
+    const articlesRes = await getNewestArticles(2);
+    newestArticles = articlesRes.data || [];
+  } catch {}
+
+  try {
+    const mostReadRes = await getMostReadArticles(5);
+    mostReadArticles = mostReadRes.data || [];
+  } catch {}
+
   const carouselSlides: CarouselSlide[] = banners.map((banner) => ({
     id: banner.id,
     image: getStrapiImageUrl(banner.image),
@@ -133,14 +171,12 @@ export default async function Home() {
   return (
     <AppLayout>
       <div className="flex gap-8">
-        {/* Main content */}
+        {/* Hlavní obsah */}
         <div className="flex-1 min-w-0 space-y-8">
-          {/* Hero carousel */}
           {carouselSlides.length > 0 && (
             <HeroCarousel slides={carouselSlides} />
           )}
 
-          {/* Category pills */}
           <div className="flex flex-wrap gap-2">
             <Link href="/">
               <Badge
@@ -162,7 +198,6 @@ export default async function Home() {
             ))}
           </div>
 
-          {/* Featured books */}
           {featuredBooks.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -179,7 +214,6 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Most downloaded */}
           {popularBooks.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -196,7 +230,11 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Newest books */}
+          {/* Bannery s nejnovějšími aktualitami */}
+          {newestArticles.length > 0 && (
+            <ArticleBanners articles={newestArticles} />
+          )}
+
           {newestBooks.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -214,9 +252,34 @@ export default async function Home() {
           )}
         </div>
 
-        {/* Right sidebar */}
+        {/* Pravý sidebar */}
         <aside className="hidden lg:block w-64 flex-shrink-0 space-y-8">
-          {/* Popular authors */}
+          {/* Nejčtenější články */}
+          {mostReadArticles.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Newspaper className="h-4 w-4 text-blue-500" />
+                Nejčtenější články
+              </h3>
+              <div className="divide-y divide-gray-100">
+                {mostReadArticles.map((article, index) => (
+                  <MostReadArticleItem
+                    key={article.id}
+                    article={article}
+                    rank={index + 1}
+                  />
+                ))}
+              </div>
+              <Link
+                href="/aktuality"
+                className="text-sm text-blue-600 hover:text-blue-800 mt-3 inline-block"
+              >
+                Všechny aktuality &rarr;
+              </Link>
+            </div>
+          )}
+
+          {/* Nejoblíbenější autoři */}
           {topAuthors.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
@@ -236,7 +299,7 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Categories */}
+          {/* Kategorie */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
               Kategorie
