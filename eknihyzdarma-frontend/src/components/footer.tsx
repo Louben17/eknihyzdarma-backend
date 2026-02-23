@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Mail, Send, MapPin, FileText, Truck, ShieldCheck, Phone } from "lucide-react";
+import Image from "next/image";
+import { Mail, Send, FileText, Truck, ShieldCheck, Phone } from "lucide-react";
 import { useState } from "react";
 
 const quickLinks = [
@@ -38,11 +39,14 @@ export default function Footer() {
 
           {/* Branding */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="bg-blue-600 rounded-lg p-1.5 group-hover:bg-blue-500 transition-colors">
-                <BookOpen className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-white font-bold text-lg">EKnihyzdarma.cz</span>
+            <Link href="/">
+              <Image
+                src="/logo.png"
+                alt="EKnihy zdarma"
+                width={160}
+                height={48}
+                className="h-10 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="text-sm leading-relaxed text-slate-400">
               Největší česká knihovna volně dostupných e-knih. Stovky titulů ke stažení zdarma bez registrace.

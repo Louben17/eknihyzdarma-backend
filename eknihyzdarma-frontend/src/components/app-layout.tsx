@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Home, Users, Grid3X3, BookOpen, Newspaper } from "lucide-react";
+import { Search, Home, Users, Grid3X3, Newspaper } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/footer";
@@ -20,11 +21,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 p-6 flex-shrink-0">
+      <aside className="w-64 bg-white border-r border-gray-200 p-6 shrink-0">
         <div className="mb-8">
-          <Link href="/" className="flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900">E-knihy zdarma</h1>
+          <Link href="/">
+            <Image
+              src="/logo.png"
+              alt="EKnihy zdarma"
+              width={160}
+              height={48}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
         </div>
 
