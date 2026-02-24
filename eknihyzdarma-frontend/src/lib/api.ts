@@ -2,9 +2,9 @@ import type { Book, Author, Category, Banner, Article, StrapiResponse } from './
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://eknihyzdarma-backend-1.onrender.com';
 
-async function fetchApi<T>(endpoint: string): Promise<T> {
+async function fetchApi<T>(endpoint: string, nextOptions?: { revalidate: number }): Promise<T> {
   const url = `${STRAPI_URL}/api${endpoint}`;
-  const res = await fetch(url, { next: { revalidate: 60 } });
+  const res = await fetch(url, { next: { revalidate: nextOptions?.revalidate ?? 60 } });
 
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
@@ -94,6 +94,14 @@ export async function getBooksByCategoryExcluding(categorySlug: string, excludeS
 
 export async function getRandomBooks(excludeSlug: string, limit = 20): Promise<StrapiResponse<Book[]>> {
   return fetchApi(`/books?filters[slug][$ne]=${excludeSlug}&populate[0]=cover&populate[1]=author&pagination[pageSize]=${limit}&sort=downloads:desc`);
+}
+
+export async function searchBooks(query: string, pageSize = 30): Promise<StrapiResponse<Book[]>> {
+  const q = encodeURIComponent(query);
+  return fetchApi(
+    `/books?filters[$or][0][title][$containsi]=${q}&filters[$or][1][description][$containsi]=${q}&filters[$or][2][author][name][$containsi]=${q}&populate[0]=cover&populate[1]=author&populate[2]=category&pagination[pageSize]=${pageSize}&sort=downloads:desc`,
+    { revalidate: 0 }
+  );
 }
 
 export { STRAPI_URL };

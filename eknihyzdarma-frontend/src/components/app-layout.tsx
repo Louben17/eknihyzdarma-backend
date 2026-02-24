@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Search, Home, Users, Grid3X3, Newspaper } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search, Home, Users, Grid3X3, Newspaper, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/footer";
+import { useState, useEffect, Suspense } from "react";
 
 const navItems = [
   { href: "/", label: "Knihy", icon: Home },
@@ -14,6 +15,50 @@ const navItems = [
   { href: "/autori", label: "Autoři", icon: Users },
   { href: "/aktuality", label: "Aktuality", icon: Newspaper },
 ];
+
+function SearchBar() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
+
+  useEffect(() => {
+    setQuery(searchParams.get("q") ?? "");
+  }, [searchParams]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (q) {
+      router.push(`/hledani?q=${encodeURIComponent(q)}`);
+    }
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    router.push("/");
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex-1 max-w-xl relative">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Hledat knihy, autory..."
+        className="pl-10 pr-8"
+      />
+      {query && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
+    </form>
+  );
+}
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -61,14 +106,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
         <header className="bg-white border-b border-gray-200 px-8 py-4 flex items-center">
-          <div className="flex-1 max-w-xl relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Hledat knihy..."
-              className="pl-10"
-              readOnly
-            />
-          </div>
+          <Suspense fallback={
+            <div className="flex-1 max-w-xl relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input placeholder="Hledat knihy, autory..." className="pl-10" disabled />
+            </div>
+          }>
+            <SearchBar />
+          </Suspense>
         </header>
 
         {/* Page Content + Footer */}
