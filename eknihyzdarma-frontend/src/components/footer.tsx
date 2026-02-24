@@ -34,7 +34,7 @@ export default function Footer() {
   return (
     <footer className="bg-slate-900 text-slate-300 mt-auto">
       {/* Hlavní sekce */}
-      <div className="max-w-none px-8 py-12">
+      <div className="max-w-none px-4 sm:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Branding */}
@@ -146,7 +146,7 @@ export default function Footer() {
       <div className="border-t border-slate-800" />
 
       {/* Spodní lišta */}
-      <div className="px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="px-4 sm:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-xs text-slate-500">
           © {new Date().getFullYear()} EKnihyzdarma.cz — Odborné texty{" "}
           <a

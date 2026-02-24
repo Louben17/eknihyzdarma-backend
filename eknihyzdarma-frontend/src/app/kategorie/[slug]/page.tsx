@@ -18,7 +18,7 @@ function BookCard({ book }: { book: Book }) {
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
-        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-100">
+        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100">
           {coverUrl ? (
             <Image
               src={coverUrl}
@@ -60,10 +60,10 @@ function AuthorCard({ author }: { author: Author }) {
           alt={author.name}
           width={40}
           height={40}
-          className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+          className="w-10 h-10 rounded-full object-cover shrink-0"
         />
       ) : (
-        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm font-medium flex-shrink-0">
+        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm font-medium shrink-0">
           {author.name.charAt(0)}
         </div>
       )}
@@ -159,7 +159,7 @@ export default async function CategoryPage({
         </div>
 
         {/* Right sidebar */}
-        <aside className="hidden lg:block w-64 flex-shrink-0 space-y-8">
+        <aside className="hidden lg:block w-64 shrink-0 space-y-8">
           {topAuthors.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
