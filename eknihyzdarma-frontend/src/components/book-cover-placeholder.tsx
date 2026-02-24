@@ -34,12 +34,12 @@ export default function BookCoverPlaceholder({ title, author }: BookCoverPlaceho
       style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}
     >
       <p className="text-white text-center font-bold leading-tight line-clamp-4"
-         style={{ fontSize: "clamp(0.5rem, 2.5cqw, 0.85rem)", wordBreak: "break-word" }}>
+         style={{ fontSize: "clamp(0.65rem, 4cqw, 1rem)", wordBreak: "break-word" }}>
         {title}
       </p>
       {author && (
         <p className="text-white/70 text-center mt-1 leading-tight line-clamp-2"
-           style={{ fontSize: "clamp(0.4rem, 2cqw, 0.7rem)" }}>
+           style={{ fontSize: "clamp(0.55rem, 3cqw, 0.8rem)" }}>
           {author}
         </p>
       )}
