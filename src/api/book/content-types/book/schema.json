@@ -63,6 +63,20 @@
     "isFeatured": {
       "type": "boolean",
       "default": false
+    },
+    "externalLinks": {
+      "type": "json",
+      "pluginOptions": {
+        "content-manager": {
+          "visible": true
+        }
+      }
+    },
+    "coverExternalUrl": {
+      "type": "string"
+    },
+    "mlpId": {
+      "type": "string"
     }
   }
 }

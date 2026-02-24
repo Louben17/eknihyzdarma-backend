@@ -41,7 +41,7 @@ export default function DownloadButton({
     <Button variant="default" className="gap-2" onClick={handleDownload}>
       <Download className="h-4 w-4" />
       {label}
-      <span className="text-xs opacity-70">({size})</span>
+      {size && <span className="text-xs opacity-70">({size})</span>}
     </Button>
   );
 }

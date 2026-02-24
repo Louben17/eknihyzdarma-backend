@@ -103,7 +103,7 @@ export default async function BookDetail({
   } catch {}
   const relatedBooks = shuffle(relatedPool).slice(0, 5);
 
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getStrapiImageUrl(book.cover) || book.coverExternalUrl || null;
   const authorPhotoUrl = getStrapiImageUrl(book.author?.photo);
 
   return (
@@ -196,7 +196,7 @@ export default async function BookDetail({
               </p>
             )}
 
-            {/* Download section */}
+            {/* Download section – vlastní soubory */}
             {book.ebookFiles && book.ebookFiles.length > 0 && (
               <div className="border-t pt-5">
                 <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
@@ -213,6 +213,37 @@ export default async function BookDetail({
                     />
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Download section – externí linky (MLP a jiné zdroje) */}
+            {book.externalLinks && book.externalLinks.length > 0 && (
+              <div className="border-t pt-5">
+                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+                  Stáhnout e-knihu
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {book.externalLinks.map((link) => (
+                    <DownloadButton
+                      key={link.url}
+                      fileUrl={link.url}
+                      label={link.format}
+                      size=""
+                      documentId={book.documentId}
+                    />
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 mt-2">
+                  Soubory poskytuje{" "}
+                  <a
+                    href="https://www.mlp.cz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-brand underline"
+                  >
+                    Městská knihovna Praha
+                  </a>
+                </p>
               </div>
             )}
           </div>

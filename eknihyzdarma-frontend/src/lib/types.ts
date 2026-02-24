@@ -33,6 +33,13 @@ export interface Category {
   slug: string;
 }
 
+export interface ExternalLink {
+  url: string;
+  format: string;
+  ext: string;
+  label: string;
+}
+
 export interface Book {
   id: number;
   documentId: string;
@@ -46,6 +53,9 @@ export interface Book {
   ebookFiles?: StrapiFile[];
   author?: Author;
   category?: Category;
+  externalLinks?: ExternalLink[];
+  coverExternalUrl?: string;
+  mlpId?: string;
 }
 
 export interface Banner {
