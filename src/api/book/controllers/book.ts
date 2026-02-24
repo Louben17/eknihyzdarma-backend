@@ -6,6 +6,7 @@ export default factories.createCoreController('api::book.book', ({ strapi }) => 
 
     const book = await strapi.documents('api::book.book').findOne({
       documentId: id,
+      status: 'published',
     });
 
     if (!book) {
@@ -14,6 +15,7 @@ export default factories.createCoreController('api::book.book', ({ strapi }) => 
 
     await strapi.documents('api::book.book').update({
       documentId: id,
+      status: 'published',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: { downloads: (book.downloads || 0) + 1 } as any,
     });

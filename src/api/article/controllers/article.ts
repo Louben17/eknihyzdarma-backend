@@ -6,6 +6,7 @@ export default factories.createCoreController('api::article.article', ({ strapi 
 
     const article = await strapi.documents('api::article.article').findOne({
       documentId: id,
+      status: 'published',
     });
 
     if (!article) {
@@ -14,6 +15,7 @@ export default factories.createCoreController('api::article.article', ({ strapi 
 
     await strapi.documents('api::article.article').update({
       documentId: id,
+      status: 'published',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: { views: (article.views || 0) + 1 } as any,
     });

@@ -53,7 +53,12 @@
     },
     "downloads": {
       "type": "integer",
-      "default": 0
+      "default": 0,
+      "pluginOptions": {
+        "content-manager": {
+          "visible": false
+        }
+      }
     },
     "isFeatured": {
       "type": "boolean",
