@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { UserPlus } from "lucide-react";
 
 export default function RegistrovatPage() {
@@ -56,7 +55,7 @@ export default function RegistrovatPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email">E-mail</Label>
+            <label htmlFor="email" className="text-sm font-medium text-gray-700">E-mail</label>
             <Input
               id="email"
               type="email"
@@ -69,7 +68,7 @@ export default function RegistrovatPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="password">Heslo</Label>
+            <label htmlFor="password" className="text-sm font-medium text-gray-700">Heslo</label>
             <Input
               id="password"
               type="password"
@@ -82,7 +81,7 @@ export default function RegistrovatPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="confirmPassword">Potvrdit heslo</Label>
+            <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">Potvrdit heslo</label>
             <Input
               id="confirmPassword"
               type="password"
