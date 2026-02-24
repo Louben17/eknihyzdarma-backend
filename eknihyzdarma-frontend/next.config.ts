@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "web2.mlp.cz",
       },
+      {
+        protocol: "https",
+        hostname: "covers.openlibrary.org",
+      },
     ],
   },
 };
