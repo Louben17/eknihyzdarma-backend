@@ -36,22 +36,11 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function RelatedBookCard({ book }: { book: Book }) {
-  const coverUrl = getStrapiImageUrl(book.cover) || book.coverExternalUrl || null;
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
         <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
-          {coverUrl ? (
-            <Image
-              src={coverUrl}
-              alt={book.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-200"
-              sizes="(max-width: 640px) 40vw, 180px"
-            />
-          ) : (
-            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
-          )}
+          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
         </div>
         <div>
           <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
@@ -102,7 +91,6 @@ export default async function BookDetail({
   } catch {}
   const relatedBooks = shuffle(relatedPool).slice(0, 5);
 
-  const coverUrl = getStrapiImageUrl(book.cover) || book.coverExternalUrl || null;
   const authorPhotoUrl = getStrapiImageUrl(book.author?.photo);
 
   return (
@@ -119,19 +107,9 @@ export default async function BookDetail({
         <div className="flex flex-col md:flex-row gap-8">
           {/* Cover */}
           <div className="shrink-0">
-            {coverUrl ? (
-              <Image
-                src={coverUrl}
-                alt={book.title}
-                width={280}
-                height={400}
-                className="rounded-lg shadow-lg object-cover"
-              />
-            ) : (
-              <div className="w-[280px] h-[400px] rounded-lg overflow-hidden" style={{ containerType: "size" }}>
-                <BookCoverPlaceholder title={book.title} author={book.author?.name} />
-              </div>
-            )}
+            <div className="w-[280px] h-[400px] rounded-lg overflow-hidden" style={{ containerType: "size" }}>
+              <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+            </div>
           </div>
 
           {/* Info */}

@@ -2,29 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AppLayout from "@/components/app-layout";
-import { getAuthorBySlug, getBooksByAuthor, getStrapiImageUrl, getBookCoverUrl } from "@/lib/api";
+import { getAuthorBySlug, getBooksByAuthor, getStrapiImageUrl } from "@/lib/api";
 import { ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
-  const coverUrl = getBookCoverUrl(book);
-
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
         <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
-          {coverUrl ? (
-            <Image
-              src={coverUrl}
-              alt={book.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-200"
-              sizes="(max-width: 640px) 40vw, 180px"
-            />
-          ) : (
-            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
-          )}
+          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
         </div>
         <div>
           <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">

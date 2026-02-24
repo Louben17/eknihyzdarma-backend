@@ -3,32 +3,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useAuth } from "@/context/auth-context";
 import { getMyLibrary, type LibraryItem } from "@/lib/user-api";
-import { getBookCoverUrl } from "@/lib/api";
 import { BookMarked, Download } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ item }: { item: LibraryItem }) {
   const book = item.book;
-  const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
         <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
-          {coverUrl ? (
-            <Image
-              src={coverUrl}
-              alt={book.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-200"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
-            />
-          ) : (
-            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
-          )}
+          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
         </div>
         <div>
           <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
