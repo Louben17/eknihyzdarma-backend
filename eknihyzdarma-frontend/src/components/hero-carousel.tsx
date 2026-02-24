@@ -21,7 +21,7 @@ export interface CarouselSlide {
 }
 
 const defaultGradients = [
-  "from-blue-600 to-indigo-700",
+  "from-brand to-brand-purple",
   "from-emerald-600 to-teal-700",
   "from-orange-500 to-red-600",
   "from-purple-600 to-pink-600",
@@ -51,11 +51,11 @@ export default function HeroCarousel({ slides }: { slides: CarouselSlide[] }) {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 1024px) 100vw, 800px"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" />
                   </>
                 ) : (
                   <div
-                    className={`absolute inset-0 bg-gradient-to-r ${slide.gradient || defaultGradients[index % defaultGradients.length]}`}
+                    className={`absolute inset-0 bg-linear-to-r ${slide.gradient || defaultGradients[index % defaultGradients.length]}`}
                   />
                 )}
                 <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">

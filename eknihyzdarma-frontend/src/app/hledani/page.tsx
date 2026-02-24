@@ -27,7 +27,7 @@ function BookCard({ book }: { book: Book }) {
         )}
       </div>
       <div className="flex-1 min-w-0 py-0.5">
-        <h3 className="text-sm font-medium text-gray-900 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-sm font-medium text-gray-900 leading-snug line-clamp-2 group-hover:text-brand transition-colors">
           {book.title}
         </h3>
         <p className="text-xs text-gray-500 mt-0.5">
@@ -90,7 +90,7 @@ export default async function HledaniPage({
             <BookOpen className="h-12 w-12 mx-auto opacity-30" />
             <p className="text-base">Žádné knihy nenalezeny</p>
             <p className="text-sm">Zkuste jiný výraz nebo{" "}
-              <Link href="/" className="text-blue-600 hover:underline">
+              <Link href="/" className="text-brand hover:underline">
                 procházejte katalog
               </Link>
             </p>

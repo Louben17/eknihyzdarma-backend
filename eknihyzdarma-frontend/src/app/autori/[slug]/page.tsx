@@ -28,7 +28,7 @@ function BookCard({ book }: { book: Book }) {
           )}
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
             {book.title}
           </h3>
           {book.downloads > 0 && (

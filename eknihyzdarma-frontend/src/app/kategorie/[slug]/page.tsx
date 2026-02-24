@@ -34,7 +34,7 @@ function BookCard({ book }: { book: Book }) {
           )}
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
             {book.title}
           </h3>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -67,7 +67,7 @@ function AuthorCard({ author }: { author: Author }) {
           {author.name.charAt(0)}
         </div>
       )}
-      <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
+      <span className="text-sm font-medium text-gray-700 group-hover:text-brand transition-colors">
         {author.name}
       </span>
     </Link>
@@ -123,7 +123,7 @@ export default async function CategoryPage({
               <Link key={cat.slug} href={`/kategorie/${cat.slug}`}>
                 <Badge
                   variant={cat.slug === slug ? "default" : "outline"}
-                  className="px-4 py-1.5 text-sm cursor-pointer hover:bg-gray-100"
+                  className={`px-4 py-1.5 text-sm cursor-pointer ${cat.slug === slug ? "hover:bg-brand/90" : "hover:bg-gray-100"}`}
                 >
                   {cat.name}
                 </Badge>
@@ -172,7 +172,7 @@ export default async function CategoryPage({
               </div>
               <Link
                 href="/autori"
-                className="text-sm text-blue-600 hover:text-blue-800 mt-3 inline-block"
+                className="text-sm text-brand hover:text-brand/80 mt-3 inline-block"
               >
                 Zobrazit všechny &rarr;
               </Link>
@@ -191,8 +191,8 @@ export default async function CategoryPage({
                   href={`/kategorie/${cat.slug}`}
                   className={`flex items-center justify-between py-1.5 text-sm transition-colors ${
                     cat.slug === slug
-                      ? "text-blue-600 font-medium"
-                      : "text-gray-600 hover:text-blue-600"
+                      ? "text-brand font-medium"
+                      : "text-gray-600 hover:text-brand"
                   }`}
                 >
                   <span>{cat.name}</span>

@@ -38,7 +38,7 @@ export default async function CategoriesPage() {
             <Link key={cat.slug} href={`/kategorie/${cat.slug}`}>
               <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                 <CardContent className="p-6 flex flex-col items-center text-center gap-3">
-                  <Grid3X3 className="h-8 w-8 text-blue-500" />
+                  <Grid3X3 className="h-8 w-8 text-brand" />
                   <div>
                     <h3 className="font-semibold text-gray-900">{cat.name}</h3>
                     <p className="text-sm text-gray-500 mt-1">

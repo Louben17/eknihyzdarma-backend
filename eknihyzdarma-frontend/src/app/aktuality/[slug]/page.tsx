@@ -76,7 +76,7 @@ export default async function ArticleDetail({
             </h1>
 
             {article.perex && (
-              <p className="text-base text-gray-500 mt-3 leading-relaxed border-l-4 border-blue-200 pl-4">
+              <p className="text-base text-gray-500 mt-3 leading-relaxed border-l-4 border-brand-purple/40 pl-4">
                 {article.perex}
               </p>
             )}

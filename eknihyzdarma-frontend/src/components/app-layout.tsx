@@ -3,11 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search, Home, Users, Grid3X3, Newspaper, X, Menu } from "lucide-react";
+import { Search, Home, Users, Grid3X3, Newspaper, X, Menu, Heart, BookMarked, LogIn, User, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/footer";
 import { useState, useEffect, Suspense } from "react";
+import { useAuth } from "@/context/auth-context";
 
 const navItems = [
   { href: "/", label: "Knihy", icon: Home },
@@ -61,6 +62,13 @@ function SearchBar() {
 }
 
 function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () => void }) {
+  const { user, logout } = useAuth();
+
+  const userNavItems = [
+    { href: "/oblibene", label: "Oblíbené", icon: Heart },
+    { href: "/moje-knihovna", label: "Moje knihovna", icon: BookMarked },
+  ];
+
   return (
     <>
       <div className="mb-8 flex items-center justify-between">
@@ -83,6 +91,7 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
           </button>
         )}
       </div>
+
       <nav className="space-y-1">
         {navItems.map((item) => {
           const isActive =
@@ -101,6 +110,59 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
           );
         })}
       </nav>
+
+      {/* Auth sekce – zobrazí se po přihlášení */}
+      {user && (
+        <>
+          <div className="my-4 border-t border-gray-100" />
+          <nav className="space-y-1">
+            {userNavItems.map((item) => {
+              const isActive = pathname.startsWith(item.href);
+              const Icon = item.icon;
+              return (
+                <Link key={item.href} href={item.href} onClick={onClose}>
+                  <Button
+                    variant={isActive ? "default" : "ghost"}
+                    className="w-full justify-start"
+                  >
+                    <Icon className="mr-2 h-4 w-4" />
+                    {item.label}
+                  </Button>
+                </Link>
+              );
+            })}
+          </nav>
+        </>
+      )}
+
+      {/* Uživatel / přihlášení – vždy dole */}
+      <div className="mt-auto pt-4 border-t border-gray-100">
+        {user ? (
+          <div className="space-y-1">
+            <Link href="/profil" onClick={onClose}>
+              <Button variant={pathname === "/profil" ? "default" : "ghost"} className="w-full justify-start">
+                <User className="mr-2 h-4 w-4" />
+                <span className="truncate">{user.email}</span>
+              </Button>
+            </Link>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-gray-500 hover:text-red-600"
+              onClick={() => { logout(); onClose?.(); }}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Odhlásit se
+            </Button>
+          </div>
+        ) : (
+          <Link href="/prihlasit" onClick={onClose}>
+            <Button variant="ghost" className="w-full justify-start text-brand">
+              <LogIn className="mr-2 h-4 w-4" />
+              Přihlásit se
+            </Button>
+          </Link>
+        )}
+      </div>
     </>
   );
 }

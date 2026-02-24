@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_libraries",
+  "info": {
+    "singularName": "user-library",
+    "pluralName": "user-libraries",
+    "displayName": "User Library",
+    "description": "Uživatelská knihovna stažených knih"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "book": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::book.book"
+    },
+    "downloadedAt": {
+      "type": "datetime"
+    }
+  }
+}

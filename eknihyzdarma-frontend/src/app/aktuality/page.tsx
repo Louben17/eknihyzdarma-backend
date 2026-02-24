@@ -30,8 +30,8 @@ function ArticleCard({ article }: { article: Article }) {
             />
           </div>
         ) : (
-          <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-            <Newspaper className="h-12 w-12 text-blue-200" />
+          <div className="h-48 bg-gradient-to-br from-brand/10 to-brand-purple/10 flex items-center justify-center">
+            <Newspaper className="h-12 w-12 text-brand/40" />
           </div>
         )}
 
@@ -49,7 +49,7 @@ function ArticleCard({ article }: { article: Article }) {
             )}
           </div>
 
-          <h2 className="text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug mb-2">
+          <h2 className="text-base font-semibold text-gray-900 group-hover:text-brand transition-colors line-clamp-2 leading-snug mb-2">
             {article.title}
           </h2>
 
@@ -78,7 +78,7 @@ export default async function AktualityPage() {
     <AppLayout>
       <div className="max-w-4xl">
         <div className="flex items-center gap-3 mb-8">
-          <Newspaper className="h-6 w-6 text-blue-500" />
+          <Newspaper className="h-6 w-6 text-brand" />
           <h1 className="text-2xl font-bold text-gray-900">Aktuality</h1>
           {total > 0 && (
             <span className="text-sm text-gray-400">({total} článků)</span>

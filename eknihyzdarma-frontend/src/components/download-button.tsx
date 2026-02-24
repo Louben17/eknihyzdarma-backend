@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { addToLibrary } from "@/lib/user-api";
 
 interface DownloadButtonProps {
   fileUrl: string;
@@ -16,6 +18,8 @@ export default function DownloadButton({
   size,
   documentId,
 }: DownloadButtonProps) {
+  const { token } = useAuth();
+
   const handleDownload = () => {
     // Track download in background
     fetch("/api/download", {
@@ -23,6 +27,11 @@ export default function DownloadButton({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ documentId }),
     }).catch(() => {});
+
+    // Add to user library if logged in
+    if (token) {
+      addToLibrary(token, documentId).catch(() => {});
+    }
 
     // Open file download
     window.open(fileUrl, "_blank");

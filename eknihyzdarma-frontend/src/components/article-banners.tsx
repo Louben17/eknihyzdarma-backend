@@ -27,10 +27,10 @@ function ArticleBanner({ article }: { article: Article }) {
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-700" />
+          <div className="absolute inset-0 bg-linear-to-br from-brand to-brand-purple" />
         )}
 
         <div className="absolute inset-0 flex flex-col justify-end p-4">
@@ -38,7 +38,7 @@ function ArticleBanner({ article }: { article: Article }) {
             <Calendar className="h-3 w-3" />
             {formatDate(article.publishedAt || article.createdAt)}
           </p>
-          <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 group-hover:text-blue-200 transition-colors drop-shadow">
+          <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 group-hover:text-white/90 transition-colors drop-shadow">
             {article.title}
           </h3>
           {article.perex && (
@@ -64,7 +64,7 @@ export default function ArticleBanners({ articles }: { articles: Article[] }) {
     <div>
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-base font-semibold text-gray-900">Nejnovější aktuality</h2>
-        <Link href="/aktuality" className="text-sm text-blue-600 hover:text-blue-800">
+        <Link href="/aktuality" className="text-sm text-brand hover:text-brand/80">
           Všechny aktuality &rarr;
         </Link>
       </div>

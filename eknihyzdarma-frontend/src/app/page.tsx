@@ -40,7 +40,7 @@ function BookCard({ book }: { book: Book }) {
           )}
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
             {book.title}
           </h3>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -79,7 +79,7 @@ function AuthorCard({ author }: { author: Author }) {
           {author.name.charAt(0)}
         </div>
       )}
-      <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
+      <span className="text-sm font-medium text-gray-700 group-hover:text-brand transition-colors">
         {author.name}
       </span>
     </Link>
@@ -96,7 +96,7 @@ function MostReadArticleItem({ article, rank }: { article: Article; rank: number
         {rank}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
+        <p className="text-sm font-medium text-gray-700 group-hover:text-brand transition-colors line-clamp-2 leading-snug">
           {article.title}
         </p>
         {article.views > 0 && (
@@ -258,7 +258,7 @@ export default async function Home() {
           {mostReadArticles.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <Newspaper className="h-4 w-4 text-blue-500" />
+                <Newspaper className="h-4 w-4 text-brand" />
                 Nejčtenější články
               </h3>
               <div className="divide-y divide-gray-100">
@@ -272,7 +272,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/aktuality"
-                className="text-sm text-blue-600 hover:text-blue-800 mt-3 inline-block"
+                className="text-sm text-brand hover:text-brand/80 mt-3 inline-block"
               >
                 Všechny aktuality &rarr;
               </Link>
@@ -292,7 +292,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/autori"
-                className="text-sm text-blue-600 hover:text-blue-800 mt-3 inline-block"
+                className="text-sm text-brand hover:text-brand/80 mt-3 inline-block"
               >
                 Zobrazit všechny &rarr;
               </Link>
@@ -309,7 +309,7 @@ export default async function Home() {
                 <Link
                   key={cat.slug}
                   href={`/kategorie/${cat.slug}`}
-                  className="flex items-center justify-between py-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                  className="flex items-center justify-between py-1.5 text-sm text-gray-600 hover:text-brand transition-colors"
                 >
                   <span>{cat.name}</span>
                 </Link>

@@ -11,6 +11,7 @@ import {
   getStrapiFileUrl,
 } from "@/lib/api";
 import DownloadButton from "@/components/download-button";
+import FavoriteButton from "@/components/favorite-button";
 import { BookOpen, ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
 
@@ -54,7 +55,7 @@ function RelatedBookCard({ book }: { book: Book }) {
           )}
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
             {book.title}
           </h3>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -137,9 +138,12 @@ export default async function BookDetail({
           {/* Info */}
           <div className="flex-1 space-y-5">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {book.title}
-              </h1>
+              <div className="flex items-start gap-3">
+                <h1 className="text-3xl font-bold text-gray-900 flex-1">
+                  {book.title}
+                </h1>
+                <FavoriteButton documentId={book.documentId} />
+              </div>
 
               {book.author && (
                 <Link
@@ -159,7 +163,7 @@ export default async function BookDetail({
                       {book.author.name.charAt(0)}
                     </div>
                   )}
-                  <span className="text-gray-600 group-hover:text-blue-600 transition-colors">
+                  <span className="text-gray-600 group-hover:text-brand transition-colors">
                     {book.author.name}
                   </span>
                 </Link>
@@ -223,7 +227,7 @@ export default async function BookDetail({
               </h2>
               <Link
                 href={book.category?.slug ? `/kategorie/${book.category.slug}` : "/"}
-                className="text-sm text-blue-600 hover:text-blue-800 shrink-0"
+                className="text-sm text-brand hover:text-brand/80 shrink-0"
               >
                 Více knih &rarr;
               </Link>
