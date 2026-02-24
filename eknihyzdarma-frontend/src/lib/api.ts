@@ -96,7 +96,7 @@ export async function getRandomBooks(excludeSlug: string, limit = 20): Promise<S
   return fetchApi(`/books?filters[slug][$ne]=${excludeSlug}&populate[0]=cover&populate[1]=author&pagination[pageSize]=${limit}&sort=downloads:desc`);
 }
 
-export async function searchBooks(query: string, pageSize = 30): Promise<StrapiResponse<Book[]>> {
+export async function searchBooks(query: string, pageSize = 100): Promise<StrapiResponse<Book[]>> {
   const q = encodeURIComponent(query);
   return fetchApi(
     `/books?filters[$or][0][title][$containsi]=${q}&filters[$or][1][description][$containsi]=${q}&filters[$or][2][author][name][$containsi]=${q}&populate[0]=cover&populate[1]=author&populate[2]=category&pagination[pageSize]=${pageSize}&sort=downloads:desc`,
