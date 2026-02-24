@@ -19,6 +19,10 @@ export function getStrapiImageUrl(image?: { url: string } | null): string | null
   return `${STRAPI_URL}${image.url}`;
 }
 
+export function getBookCoverUrl(book: { cover?: { url: string } | null; coverExternalUrl?: string }): string | null {
+  return getStrapiImageUrl(book.cover) || book.coverExternalUrl || null;
+}
+
 export async function getBooks(page = 1, pageSize = 25): Promise<StrapiResponse<Book[]>> {
   return fetchApi(`/books?populate[0]=cover&populate[1]=author&populate[2]=category&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort=title:asc`);
 }

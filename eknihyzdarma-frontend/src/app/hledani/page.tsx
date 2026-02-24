@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import AppLayout from "@/components/app-layout";
-import { searchBooks, getStrapiImageUrl } from "@/lib/api";
+import { searchBooks, getBookCoverUrl } from "@/lib/api";
 import type { Book } from "@/lib/types";
 import { Download, BookOpen, Search } from "lucide-react";
 
 function BookCard({ book }: { book: Book }) {
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">

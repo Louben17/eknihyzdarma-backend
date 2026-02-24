@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AppLayout from "@/components/app-layout";
-import { getAuthorBySlug, getBooksByAuthor, getStrapiImageUrl } from "@/lib/api";
+import { getAuthorBySlug, getBooksByAuthor, getStrapiImageUrl, getBookCoverUrl } from "@/lib/api";
 import { ArrowLeft, Download, BookOpen } from "lucide-react";
 import type { Book } from "@/lib/types";
 
 function BookCard({ book }: { book: Book }) {
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group">

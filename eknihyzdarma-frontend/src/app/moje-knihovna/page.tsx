@@ -6,12 +6,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/context/auth-context";
 import { getMyLibrary, type LibraryItem } from "@/lib/user-api";
-import { getStrapiImageUrl } from "@/lib/api";
+import { getBookCoverUrl } from "@/lib/api";
 import { BookMarked, Download } from "lucide-react";
 
 function BookCard({ item }: { item: LibraryItem }) {
   const book = item.book;
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group">

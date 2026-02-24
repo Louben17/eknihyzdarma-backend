@@ -14,12 +14,13 @@ import {
   getNewestArticles,
   getMostReadArticles,
   getStrapiImageUrl,
+  getBookCoverUrl,
 } from "@/lib/api";
 import type { Book, Author, Banner, Article } from "@/lib/types";
 import { Download, Star, TrendingUp, Clock, Eye, Newspaper } from "lucide-react";
 
 function BookCard({ book }: { book: Book }) {
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group">

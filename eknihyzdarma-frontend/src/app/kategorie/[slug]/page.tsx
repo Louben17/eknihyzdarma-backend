@@ -8,12 +8,13 @@ import {
   getBooksByCategory,
   getTopAuthors,
   getStrapiImageUrl,
+  getBookCoverUrl,
 } from "@/lib/api";
 import type { Book, Author } from "@/lib/types";
 import { ArrowLeft } from "lucide-react";
 
 function BookCard({ book }: { book: Book }) {
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
