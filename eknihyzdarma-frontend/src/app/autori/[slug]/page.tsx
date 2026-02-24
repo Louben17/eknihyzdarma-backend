@@ -3,8 +3,9 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import AppLayout from "@/components/app-layout";
 import { getAuthorBySlug, getBooksByAuthor, getStrapiImageUrl, getBookCoverUrl } from "@/lib/api";
-import { ArrowLeft, Download, BookOpen } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
+import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getBookCoverUrl(book);
@@ -12,7 +13,7 @@ function BookCard({ book }: { book: Book }) {
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
-        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100">
+        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
           {coverUrl ? (
             <Image
               src={coverUrl}
@@ -22,9 +23,7 @@ function BookCard({ book }: { book: Book }) {
               sizes="(max-width: 640px) 40vw, 180px"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <BookOpen className="h-8 w-8 text-gray-300" />
-            </div>
+            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
           )}
         </div>
         <div>

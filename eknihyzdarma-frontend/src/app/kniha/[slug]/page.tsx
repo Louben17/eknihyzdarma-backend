@@ -12,7 +12,8 @@ import {
 } from "@/lib/api";
 import DownloadButton from "@/components/download-button";
 import FavoriteButton from "@/components/favorite-button";
-import { BookOpen, ArrowLeft, Download } from "lucide-react";
+import BookCoverPlaceholder from "@/components/book-cover-placeholder";
+import { ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
 
 function getFileLabel(name: string): string {
@@ -35,11 +36,11 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function RelatedBookCard({ book }: { book: Book }) {
-  const coverUrl = getStrapiImageUrl(book.cover);
+  const coverUrl = getStrapiImageUrl(book.cover) || book.coverExternalUrl || null;
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
-        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100">
+        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
           {coverUrl ? (
             <Image
               src={coverUrl}
@@ -49,9 +50,7 @@ function RelatedBookCard({ book }: { book: Book }) {
               sizes="(max-width: 640px) 40vw, 180px"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <BookOpen className="h-8 w-8 text-gray-300" />
-            </div>
+            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
           )}
         </div>
         <div>
@@ -129,8 +128,8 @@ export default async function BookDetail({
                 className="rounded-lg shadow-lg object-cover"
               />
             ) : (
-              <div className="w-[280px] h-[400px] bg-gray-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="h-16 w-16 text-gray-300" />
+              <div className="w-[280px] h-[400px] rounded-lg overflow-hidden" style={{ containerType: "size" }}>
+                <BookCoverPlaceholder title={book.title} author={book.author?.name} />
               </div>
             )}
           </div>

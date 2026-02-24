@@ -5,13 +5,14 @@ import AppLayout from "@/components/app-layout";
 import { searchBooks, getBookCoverUrl } from "@/lib/api";
 import type { Book } from "@/lib/types";
 import { Download, BookOpen, Search } from "lucide-react";
+import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getBookCoverUrl(book);
 
   return (
     <Link href={`/kniha/${book.slug}`} className="group flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-      <div className="relative w-14 aspect-3/4 rounded-md overflow-hidden bg-gray-100 shrink-0">
+      <div className="relative w-14 aspect-3/4 rounded-md overflow-hidden bg-gray-100 shrink-0" style={{ containerType: "size" }}>
         {coverUrl ? (
           <Image
             src={coverUrl}
@@ -21,9 +22,7 @@ function BookCard({ book }: { book: Book }) {
             sizes="56px"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <BookOpen className="h-5 w-5 text-gray-300" />
-          </div>
+          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
         )}
       </div>
       <div className="flex-1 min-w-0 py-0.5">

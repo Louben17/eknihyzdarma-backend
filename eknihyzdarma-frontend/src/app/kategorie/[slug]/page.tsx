@@ -12,6 +12,7 @@ import {
 } from "@/lib/api";
 import type { Book, Author } from "@/lib/types";
 import { ArrowLeft } from "lucide-react";
+import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getBookCoverUrl(book);
@@ -19,7 +20,7 @@ function BookCard({ book }: { book: Book }) {
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
-        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100">
+        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
           {coverUrl ? (
             <Image
               src={coverUrl}
@@ -29,9 +30,7 @@ function BookCard({ book }: { book: Book }) {
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <span className="text-gray-400 text-xs">Bez obálky</span>
-            </div>
+            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
           )}
         </div>
         <div>

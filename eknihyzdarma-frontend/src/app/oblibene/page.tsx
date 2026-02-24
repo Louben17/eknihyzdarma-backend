@@ -8,6 +8,7 @@ import { useAuth } from "@/context/auth-context";
 import { getMyFavorites, type FavoriteItem } from "@/lib/user-api";
 import { getBookCoverUrl } from "@/lib/api";
 import { Heart, Download } from "lucide-react";
+import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ item }: { item: FavoriteItem }) {
   const book = item.book;
@@ -16,7 +17,7 @@ function BookCard({ item }: { item: FavoriteItem }) {
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
-        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-100">
+        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
           {coverUrl ? (
             <Image
               src={coverUrl}
@@ -26,9 +27,7 @@ function BookCard({ item }: { item: FavoriteItem }) {
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <span className="text-gray-400 text-xs">Bez obálky</span>
-            </div>
+            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
           )}
         </div>
         <div>
