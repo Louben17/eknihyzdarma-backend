@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AppLayout from "@/components/app-layout";
-import { getArticleBySlug, getStrapiImageUrl, STRAPI_URL } from "@/lib/api";
+import ArticleViewTracker from "@/components/article-view-tracker";
+import { getArticleBySlug, getStrapiImageUrl } from "@/lib/api";
 import { ArrowLeft, Calendar, Eye } from "lucide-react";
 
 function formatDate(dateStr: string): string {
@@ -11,15 +12,6 @@ function formatDate(dateStr: string): string {
     month: "long",
     year: "numeric",
   });
-}
-
-async function incrementView(documentId: string) {
-  try {
-    await fetch(`${STRAPI_URL}/api/articles/${documentId}/view`, {
-      method: "POST",
-      cache: "no-store",
-    });
-  } catch {}
 }
 
 export default async function ArticleDetail({
@@ -35,13 +27,13 @@ export default async function ArticleDetail({
     notFound();
   }
 
-  // Inkrementovat zobrazení na pozadí
-  void incrementView(article.documentId);
-
   const coverUrl = getStrapiImageUrl(article.cover);
 
   return (
     <AppLayout>
+      {/* Počítá zobrazení na klientovi při skutečné návštěvě */}
+      <ArticleViewTracker documentId={article.documentId} />
+
       <div className="max-w-2xl mx-auto">
         <Link
           href="/aktuality"
