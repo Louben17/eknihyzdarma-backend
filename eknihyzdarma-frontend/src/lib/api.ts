@@ -88,4 +88,12 @@ export async function getMostReadArticles(limit = 5): Promise<StrapiResponse<Art
   return fetchApi(`/articles?populate=cover&pagination[pageSize]=${limit}&sort=views:desc`);
 }
 
+export async function getBooksByCategoryExcluding(categorySlug: string, excludeSlug: string, limit = 20): Promise<StrapiResponse<Book[]>> {
+  return fetchApi(`/books?filters[category][slug][$eq]=${categorySlug}&filters[slug][$ne]=${excludeSlug}&populate[0]=cover&populate[1]=author&pagination[pageSize]=${limit}&sort=downloads:desc`);
+}
+
+export async function getRandomBooks(excludeSlug: string, limit = 20): Promise<StrapiResponse<Book[]>> {
+  return fetchApi(`/books?filters[slug][$ne]=${excludeSlug}&populate[0]=cover&populate[1]=author&pagination[pageSize]=${limit}&sort=downloads:desc`);
+}
+
 export { STRAPI_URL };

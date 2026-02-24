@@ -3,9 +3,16 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import AppLayout from "@/components/app-layout";
 import { Badge } from "@/components/ui/badge";
-import { getBookBySlug, getStrapiImageUrl, getStrapiFileUrl } from "@/lib/api";
+import {
+  getBookBySlug,
+  getBooksByCategoryExcluding,
+  getRandomBooks,
+  getStrapiImageUrl,
+  getStrapiFileUrl,
+} from "@/lib/api";
 import DownloadButton from "@/components/download-button";
 import { BookOpen, ArrowLeft, Download } from "lucide-react";
+import type { Book } from "@/lib/types";
 
 function getFileLabel(name: string): string {
   const ext = name.split(".").pop()?.toLowerCase();
@@ -22,6 +29,49 @@ function formatFileSize(sizeKB: number): string {
   return `${Math.round(sizeKB)} KB`;
 }
 
+function shuffle<T>(arr: T[]): T[] {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function RelatedBookCard({ book }: { book: Book }) {
+  const coverUrl = getStrapiImageUrl(book.cover);
+  return (
+    <Link href={`/kniha/${book.slug}`} className="group">
+      <div className="space-y-2">
+        <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100">
+          {coverUrl ? (
+            <Image
+              src={coverUrl}
+              alt={book.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-200"
+              sizes="(max-width: 640px) 40vw, 180px"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <BookOpen className="h-8 w-8 text-gray-300" />
+            </div>
+          )}
+        </div>
+        <div>
+          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+            {book.title}
+          </h3>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {book.author?.name || "Neznámý autor"}
+          </p>
+          {book.downloads > 0 && (
+            <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+              <Download className="h-3 w-3" />
+              {book.downloads.toLocaleString("cs-CZ")}
+            </p>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default async function BookDetail({
   params,
 }: {
@@ -35,12 +85,29 @@ export default async function BookDetail({
     notFound();
   }
 
+  // Načíst příbuzné knihy – přednostně ze stejné kategorie
+  let relatedPool: Book[] = [];
+  try {
+    if (book.category?.slug) {
+      const catRes = await getBooksByCategoryExcluding(book.category.slug, slug);
+      relatedPool = catRes.data || [];
+    }
+    if (relatedPool.length < 5) {
+      const fallbackRes = await getRandomBooks(slug);
+      const fallback = (fallbackRes.data || []).filter(
+        (b) => !relatedPool.some((r) => r.id === b.id)
+      );
+      relatedPool = [...relatedPool, ...fallback];
+    }
+  } catch {}
+  const relatedBooks = shuffle(relatedPool).slice(0, 5);
+
   const coverUrl = getStrapiImageUrl(book.cover);
   const authorPhotoUrl = getStrapiImageUrl(book.author?.photo);
 
   return (
     <AppLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-10">
         <Link
           href="/"
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900"
@@ -51,7 +118,7 @@ export default async function BookDetail({
 
         <div className="flex flex-col md:flex-row gap-8">
           {/* Cover */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             {coverUrl ? (
               <Image
                 src={coverUrl}
@@ -146,6 +213,28 @@ export default async function BookDetail({
             )}
           </div>
         </div>
+
+        {/* Doporučené knihy */}
+        {relatedBooks.length > 0 && (
+          <div className="border-t pt-8">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-base font-semibold text-gray-900">
+                Podívejte se i na další e-knihy v naší knihovně
+              </h2>
+              <Link
+                href={book.category?.slug ? `/kategorie/${book.category.slug}` : "/"}
+                className="text-sm text-blue-600 hover:text-blue-800 shrink-0"
+              >
+                Více knih &rarr;
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-5">
+              {relatedBooks.map((b) => (
+                <RelatedBookCard key={b.id} book={b} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </AppLayout>
   );
