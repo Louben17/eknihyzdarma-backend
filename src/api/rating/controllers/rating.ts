@@ -1,6 +1,8 @@
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreController('api::rating.rating', ({ strapi }) => ({
+const RATING_UID = 'api::rating.rating' as any;
+
+export default factories.createCoreController(RATING_UID, ({ strapi }) => ({
 
   // POST /api/ratings/upsert
   // Body: { bookDocumentId, score, ipAddress }
@@ -25,22 +27,22 @@ export default factories.createCoreController('api::rating.rating', ({ strapi })
     if (!book) return ctx.notFound('Kniha nenalezena');
 
     // Najít existující hodnocení od této IP pro tuto knihu
-    const existing = await strapi.documents('api::rating.rating').findMany({
+    const existing = await strapi.documents(RATING_UID).findMany({
       filters: {
         book: { documentId: { $eq: bookDocumentId } },
         ipAddress: { $eq: ipAddress },
       } as any,
-    });
+    }) as any[];
 
     if (existing.length > 0) {
       // Aktualizovat existující hodnocení
-      await strapi.documents('api::rating.rating').update({
+      await strapi.documents(RATING_UID).update({
         documentId: existing[0].documentId,
         data: { score } as any,
       });
     } else {
       // Vytvořit nové hodnocení
-      await strapi.documents('api::rating.rating').create({
+      await strapi.documents(RATING_UID).create({
         data: {
           score,
           ipAddress,
@@ -50,11 +52,11 @@ export default factories.createCoreController('api::rating.rating', ({ strapi })
     }
 
     // Spočítat průměr pro tuto knihu
-    const allRatings = await strapi.documents('api::rating.rating').findMany({
+    const allRatings = await strapi.documents(RATING_UID).findMany({
       filters: {
         book: { documentId: { $eq: bookDocumentId } },
       } as any,
-    });
+    }) as any[];
 
     const count = allRatings.length;
     const sum = allRatings.reduce((acc: number, r: any) => acc + r.score, 0);
@@ -68,11 +70,11 @@ export default factories.createCoreController('api::rating.rating', ({ strapi })
     const { documentId } = ctx.params as { documentId: string };
     const ip = ctx.query.ip as string | undefined;
 
-    const allRatings = await strapi.documents('api::rating.rating').findMany({
+    const allRatings = await strapi.documents(RATING_UID).findMany({
       filters: {
         book: { documentId: { $eq: documentId } },
       } as any,
-    });
+    }) as any[];
 
     const count = allRatings.length;
     const sum = allRatings.reduce((acc: number, r: any) => acc + r.score, 0);
