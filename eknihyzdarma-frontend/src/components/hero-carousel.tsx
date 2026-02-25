@@ -41,7 +41,7 @@ export default function HeroCarousel({ slides }: { slides: CarouselSlide[] }) {
         {slides.map((slide, index) => (
           <CarouselItem key={slide.id}>
             <Link href={slide.href}>
-              <div className="relative h-48 sm:h-56 md:h-64 rounded-xl overflow-hidden cursor-pointer group">
+              <div className="relative h-36 sm:h-56 md:h-64 rounded-xl overflow-hidden cursor-pointer group">
                 {slide.image ? (
                   <>
                     <Image
