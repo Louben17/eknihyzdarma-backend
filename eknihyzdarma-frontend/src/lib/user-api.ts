@@ -1,7 +1,5 @@
 import type { Book } from './types';
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://eknihyzdarma-backend-1.onrender.com';
-
 function authHeaders(token: string) {
   return {
     'Content-Type': 'application/json',
@@ -23,7 +21,7 @@ export interface FavoriteItem {
 }
 
 export async function getMyLibrary(token: string): Promise<LibraryItem[]> {
-  const res = await fetch(`${STRAPI_URL}/api/user-library/my`, {
+  const res = await fetch('/api/user/library', {
     headers: authHeaders(token),
   });
   if (!res.ok) return [];
@@ -32,7 +30,7 @@ export async function getMyLibrary(token: string): Promise<LibraryItem[]> {
 }
 
 export async function addToLibrary(token: string, bookDocumentId: string): Promise<void> {
-  await fetch(`${STRAPI_URL}/api/user-library/add`, {
+  await fetch('/api/user/library', {
     method: 'POST',
     headers: authHeaders(token),
     body: JSON.stringify({ bookDocumentId }),
@@ -40,7 +38,7 @@ export async function addToLibrary(token: string, bookDocumentId: string): Promi
 }
 
 export async function getMyFavorites(token: string): Promise<FavoriteItem[]> {
-  const res = await fetch(`${STRAPI_URL}/api/user-favorites/my`, {
+  const res = await fetch('/api/user/favorites', {
     headers: authHeaders(token),
   });
   if (!res.ok) return [];
@@ -49,7 +47,7 @@ export async function getMyFavorites(token: string): Promise<FavoriteItem[]> {
 }
 
 export async function toggleFavorite(token: string, bookDocumentId: string): Promise<boolean> {
-  const res = await fetch(`${STRAPI_URL}/api/user-favorites/toggle`, {
+  const res = await fetch('/api/user/favorites', {
     method: 'POST',
     headers: authHeaders(token),
     body: JSON.stringify({ bookDocumentId }),
@@ -60,7 +58,7 @@ export async function toggleFavorite(token: string, bookDocumentId: string): Pro
 }
 
 export async function checkFavorite(token: string, bookDocumentId: string): Promise<boolean> {
-  const res = await fetch(`${STRAPI_URL}/api/user-favorites/check/${bookDocumentId}`, {
+  const res = await fetch(`/api/user/favorites/${bookDocumentId}`, {
     headers: authHeaders(token),
   });
   if (!res.ok) return false;
