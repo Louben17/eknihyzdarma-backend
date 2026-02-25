@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 
-export default function GoogleCallbackPage() {
+function GoogleCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { loginWithToken } = useAuth();
@@ -34,20 +34,32 @@ export default function GoogleCallbackPage() {
       });
   }, [searchParams, loginWithToken, router]);
 
+  if (error) {
+    return (
+      <>
+        <p className="text-red-600 font-medium">{error}</p>
+        <p className="text-sm text-gray-400 mt-2">Přesměrování zpět na přihlášení...</p>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+      <p className="text-gray-600 font-medium">Přihlašuji přes Google...</p>
+    </>
+  );
+}
+
+export default function GoogleCallbackPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="text-center">
-        {error ? (
-          <>
-            <p className="text-red-600 font-medium">{error}</p>
-            <p className="text-sm text-gray-400 mt-2">Přesměrování zpět na přihlášení...</p>
-          </>
-        ) : (
-          <>
-            <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">Přihlašuji přes Google...</p>
-          </>
-        )}
+        <Suspense fallback={
+          <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+        }>
+          <GoogleCallbackInner />
+        </Suspense>
       </div>
     </div>
   );
