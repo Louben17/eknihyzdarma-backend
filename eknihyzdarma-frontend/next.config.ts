@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
         hostname: "eknihyzdarma-backend-1.onrender.com",
       },
       {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
+        protocol: "http",
+        hostname: "46.225.238.52",
+      },
+      {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
