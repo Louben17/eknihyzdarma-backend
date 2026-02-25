@@ -13,6 +13,7 @@ import {
 import type { Book, Author } from "@/lib/types";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
+import CategoryMobileFilter from "@/components/category-mobile-filter";
 
 const PAGE_SIZE = 25;
 
@@ -237,8 +238,8 @@ export default async function CategoryPage({
             Zpět na všechny knihy
           </Link>
 
-          {/* Category pills */}
-          <div className="flex flex-wrap gap-2">
+          {/* Category pills – desktop only */}
+          <div className="hidden md:flex flex-wrap gap-2">
             <Link href="/">
               <Badge
                 variant="outline"
@@ -258,6 +259,9 @@ export default async function CategoryPage({
               </Link>
             ))}
           </div>
+
+          {/* Category filter – mobile only */}
+          <CategoryMobileFilter categories={categories} currentSlug={slug} />
 
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
