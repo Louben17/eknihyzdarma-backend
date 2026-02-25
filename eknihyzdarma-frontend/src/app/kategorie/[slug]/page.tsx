@@ -11,8 +11,10 @@ import {
   getStrapiImageUrl,
 } from "@/lib/api";
 import type { Book, Author } from "@/lib/types";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
+
+const PAGE_SIZE = 25;
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
@@ -67,40 +69,155 @@ function AuthorCard({ author }: { author: Author }) {
   );
 }
 
+function Pagination({
+  currentPage,
+  pageCount,
+  slug,
+}: {
+  currentPage: number;
+  pageCount: number;
+  slug: string;
+}) {
+  if (pageCount <= 1) return null;
+
+  const pageUrl = (p: number) =>
+    p === 1 ? `/kategorie/${slug}` : `/kategorie/${slug}?strana=${p}`;
+
+  // Build page numbers to show: first, last, current ±2, with ellipsis
+  const pages: (number | "...")[] = [];
+  const delta = 2;
+  const range: number[] = [];
+
+  for (
+    let i = Math.max(1, currentPage - delta);
+    i <= Math.min(pageCount, currentPage + delta);
+    i++
+  ) {
+    range.push(i);
+  }
+
+  if (range[0] > 2) pages.push(1, "...");
+  else if (range[0] === 2) pages.push(1);
+
+  pages.push(...range);
+
+  if (range[range.length - 1] < pageCount - 1) pages.push("...", pageCount);
+  else if (range[range.length - 1] === pageCount - 1) pages.push(pageCount);
+
+  return (
+    <nav className="flex items-center justify-center gap-1 pt-6" aria-label="Stránkování">
+      {/* Předchozí */}
+      {currentPage > 1 ? (
+        <Link
+          href={pageUrl(currentPage - 1)}
+          className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          aria-label="Předchozí strana"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Link>
+      ) : (
+        <span className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-100 text-gray-300 cursor-not-allowed">
+          <ChevronLeft className="h-4 w-4" />
+        </span>
+      )}
+
+      {/* Čísla stránek */}
+      {pages.map((p, i) =>
+        p === "..." ? (
+          <span
+            key={`ellipsis-${i}`}
+            className="inline-flex items-center justify-center h-9 w-9 text-gray-400 text-sm select-none"
+          >
+            …
+          </span>
+        ) : (
+          <Link
+            key={p}
+            href={pageUrl(p)}
+            className={`inline-flex items-center justify-center h-9 min-w-9 px-2 rounded-md border text-sm font-medium transition-colors ${
+              p === currentPage
+                ? "border-brand bg-brand text-white"
+                : "border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            }`}
+            aria-current={p === currentPage ? "page" : undefined}
+          >
+            {p}
+          </Link>
+        )
+      )}
+
+      {/* Následující */}
+      {currentPage < pageCount ? (
+        <Link
+          href={pageUrl(currentPage + 1)}
+          className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          aria-label="Následující strana"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+      ) : (
+        <span className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-100 text-gray-300 cursor-not-allowed">
+          <ChevronRight className="h-4 w-4" />
+        </span>
+      )}
+    </nav>
+  );
+}
+
+function pluralBooks(count: number) {
+  if (count === 1) return "kniha";
+  if (count < 5) return "knihy";
+  return "knih";
+}
+
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ strana?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const { strana } = await searchParams;
+  const page = Math.max(1, parseInt(strana || "1", 10) || 1);
+
   const res = await getCategories();
   const category = res.data?.find((c) => c.slug === slug);
   if (!category) return {};
 
+  const pageLabel = page > 1 ? ` – strana ${page}` : "";
+
   return {
-    title: `${category.name} – E-knihy zdarma`,
+    title: `${category.name}${pageLabel} – E-knihy zdarma`,
     description: `E-knihy z kategorie ${category.name} ke stažení zdarma. Procházejte naši sbírku titulů ve formátech EPUB, PDF a MOBI.`,
-    alternates: { canonical: `/kategorie/${slug}` },
+    alternates: { canonical: page === 1 ? `/kategorie/${slug}` : `/kategorie/${slug}?strana=${page}` },
     openGraph: { title: `${category.name} | Eknihyzdarma.cz` },
   };
 }
 
 export default async function CategoryPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ strana?: string }>;
 }) {
   const { slug } = await params;
+  const { strana } = await searchParams;
+  const page = Math.max(1, parseInt(strana || "1", 10) || 1);
 
   const [catsRes, booksRes, authorsRes] = await Promise.all([
     getCategories(),
-    getBooksByCategory(slug, 1),
+    getBooksByCategory(slug, page),
     getTopAuthors(8),
   ]);
 
   const categories = catsRes.data || [];
   const books = booksRes.data || [];
   const topAuthors = authorsRes.data || [];
+  const pagination = booksRes.meta?.pagination;
+  const totalBooks = pagination?.total ?? books.length;
+  const pageCount = pagination?.pageCount ?? 1;
 
   const currentCategory = categories.find((c) => c.slug === slug);
   if (!currentCategory) {
@@ -147,12 +264,12 @@ export default async function CategoryPage({
               {currentCategory.name}
             </h2>
             <p className="text-gray-500 text-sm mt-1">
-              {books.length}{" "}
-              {books.length === 1
-                ? "kniha"
-                : books.length < 5
-                  ? "knihy"
-                  : "knih"}
+              {totalBooks} {pluralBooks(totalBooks)}
+              {pageCount > 1 && (
+                <span className="ml-2 text-gray-400">
+                  · strana {page} z {pageCount}
+                </span>
+              )}
             </p>
           </div>
 
@@ -167,6 +284,8 @@ export default async function CategoryPage({
               V této kategorii zatím nejsou žádné knihy.
             </p>
           )}
+
+          <Pagination currentPage={page} pageCount={pageCount} slug={slug} />
         </div>
 
         {/* Right sidebar */}
