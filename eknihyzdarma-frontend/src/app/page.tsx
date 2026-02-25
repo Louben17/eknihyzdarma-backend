@@ -17,7 +17,6 @@ import {
   getMostDownloadedBooks,
   getFeaturedBooks,
   getNewestBooks,
-  getTopAuthors,
   getBanners,
   getNewestArticles,
   getMostReadArticles,
@@ -148,10 +147,16 @@ export default async function Home() {
     newestBooks = newestRes.data || [];
   } catch {}
 
-  try {
-    const authorsRes = await getTopAuthors(8);
-    topAuthors = authorsRes.data || [];
-  } catch {}
+  // Autoři z nejoblíbenějších knih (isFeatured), unikátní podle slug
+  {
+    const seen = new Set<string>();
+    for (const book of featuredBooks) {
+      if (book.author && !seen.has(book.author.slug)) {
+        seen.add(book.author.slug);
+        topAuthors.push(book.author as Author);
+      }
+    }
+  }
 
   try {
     const bannersRes = await getBanners();

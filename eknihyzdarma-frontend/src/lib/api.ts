@@ -60,7 +60,7 @@ export async function getTopAuthors(limit = 5): Promise<StrapiResponse<Author[]>
 }
 
 export async function getFeaturedBooks(limit = 6): Promise<StrapiResponse<Book[]>> {
-  return fetchApi(`/books?filters[isFeatured][$eq]=true&populate[0]=cover&populate[1]=author&populate[2]=category&pagination[pageSize]=${limit}&sort=title:asc`);
+  return fetchApi(`/books?filters[isFeatured][$eq]=true&populate[0]=cover&populate[author][populate]=photo&populate[2]=category&pagination[pageSize]=${limit}&sort=title:asc`);
 }
 
 export async function getNewestBooks(limit = 6): Promise<StrapiResponse<Book[]>> {
