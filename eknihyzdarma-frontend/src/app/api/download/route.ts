@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL ||
-  "https://eknihyzdarma-backend-1.onrender.com";
+  process.env.STRAPI_URL ||
+  "http://localhost:1337";
 
 export async function POST(request: NextRequest) {
   try {
