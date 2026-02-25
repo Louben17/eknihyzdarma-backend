@@ -110,7 +110,7 @@ export async function getRandomBooks(excludeSlug: string, limit = 20): Promise<S
 export async function getBookOfTheDay(): Promise<Book | null> {
   const res = await fetchApi<StrapiResponse<Book[]>>(
     `/books?populate[0]=cover&populate[1]=author&pagination[pageSize]=100&sort=downloads:desc`,
-    { revalidate: 3600 }
+    { revalidate: 300 }
   );
   const books = res.data || [];
   if (books.length === 0) return null;
