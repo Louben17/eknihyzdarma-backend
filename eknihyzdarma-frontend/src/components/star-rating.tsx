@@ -18,8 +18,15 @@ export default function StarRating({ bookDocumentId }: { bookDocumentId: string 
   useEffect(() => {
     fetch(`/api/rate?bookDocumentId=${bookDocumentId}`)
       .then((res) => res.json())
-      .then((d) => setData(d))
-      .catch(() => {});
+      .then((d) => {
+        // Validace – Strapi mohl vrátit chybový objekt
+        if (d && typeof d.average === "number" && typeof d.count === "number") {
+          setData(d);
+        } else {
+          setData({ average: 0, count: 0, userScore: null });
+        }
+      })
+      .catch(() => setData({ average: 0, count: 0, userScore: null }));
   }, [bookDocumentId]);
 
   const handleRate = async (score: number) => {
@@ -31,8 +38,10 @@ export default function StarRating({ bookDocumentId }: { bookDocumentId: string 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookDocumentId, score }),
       });
-      const newData: RatingData = await res.json();
-      setData(newData);
+      const newData = await res.json();
+      if (newData && typeof newData.average === "number") {
+        setData(newData);
+      }
       setJustRated(true);
     } catch {}
     setSubmitting(false);
@@ -96,7 +105,7 @@ export default function StarRating({ bookDocumentId }: { bookDocumentId: string 
               "Zatím bez hodnocení – buďte první!"
             ) : (
               <>
-                <span className="font-medium text-gray-700">{data.average.toFixed(1)}</span>
+                <span className="font-medium text-gray-700">{(data.average ?? 0).toFixed(1)}</span>
                 <span className="text-gray-400"> / 5</span>
                 <span className="text-gray-400 ml-1">
                   ({data.count} {countLabel(data.count)})
