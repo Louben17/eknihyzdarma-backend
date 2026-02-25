@@ -126,17 +126,17 @@ export default async function Home() {
   } catch {}
 
   try {
-    const featuredRes = await getFeaturedBooks(5);
+    const featuredRes = await getFeaturedBooks(6);
     featuredBooks = featuredRes.data || [];
   } catch {}
 
   try {
-    const popularRes = await getMostDownloadedBooks(5);
+    const popularRes = await getMostDownloadedBooks(6);
     popularBooks = popularRes.data || [];
   } catch {}
 
   try {
-    const newestRes = await getNewestBooks(5);
+    const newestRes = await getNewestBooks(6);
     newestBooks = newestRes.data || [];
   } catch {}
 
