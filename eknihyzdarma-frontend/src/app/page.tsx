@@ -21,9 +21,10 @@ import {
   getNewestArticles,
   getMostReadArticles,
   getStrapiImageUrl,
+  getBookOfTheDay,
 } from "@/lib/api";
 import type { Book, Author, Banner, Article } from "@/lib/types";
-import { Download, Star, TrendingUp, Clock, Eye, Newspaper, Home as HomeIcon } from "lucide-react";
+import { Download, Star, TrendingUp, Clock, Eye, Newspaper, Home as HomeIcon, Flame } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
@@ -117,6 +118,41 @@ function MostReadArticleItem({ article, rank }: { article: Article; rank: number
   );
 }
 
+function BookOfTheDayCard({ book }: { book: Book }) {
+  const coverUrl = getStrapiImageUrl(book.cover);
+  return (
+    <Link href={`/kniha/${book.slug}`} className="block group">
+      <div className="rounded-xl overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 text-white shadow-md">
+        <div className="px-4 pt-3 pb-2 flex items-center gap-1.5">
+          <Flame className="h-4 w-4" />
+          <span className="text-xs font-bold uppercase tracking-wider opacity-90">Kniha dne</span>
+        </div>
+        <div className="px-4 pb-4 flex gap-3">
+          <div className="relative w-16 h-22 rounded-md overflow-hidden flex-shrink-0 shadow-lg" style={{ height: "88px" }}>
+            {coverUrl ? (
+              <Image src={coverUrl} alt={book.title} fill className="object-cover" sizes="64px" />
+            ) : (
+              <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+            )}
+          </div>
+          <div className="flex-1 min-w-0 pt-1">
+            <h3 className="font-semibold text-white text-sm leading-tight line-clamp-3 group-hover:underline">
+              {book.title}
+            </h3>
+            <p className="text-white/75 text-xs mt-1.5">{book.author?.name}</p>
+            {book.downloads > 0 && (
+              <p className="text-white/60 text-xs mt-1 flex items-center gap-1">
+                <Download className="h-3 w-3" />
+                {book.downloads.toLocaleString("cs-CZ")} stažení
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default async function Home() {
   let categories: { name: string; slug: string }[] = [];
   let featuredBooks: Book[] = [];
@@ -126,6 +162,7 @@ export default async function Home() {
   let banners: Banner[] = [];
   let newestArticles: Article[] = [];
   let mostReadArticles: Article[] = [];
+  let bookOfTheDay: Book | null = null;
 
   try {
     const catsRes = await getCategories();
@@ -171,6 +208,10 @@ export default async function Home() {
   try {
     const mostReadRes = await getMostReadArticles(5);
     mostReadArticles = mostReadRes.data || [];
+  } catch {}
+
+  try {
+    bookOfTheDay = await getBookOfTheDay();
   } catch {}
 
   const carouselSlides: CarouselSlide[] = banners.map((banner) => ({
@@ -274,6 +315,9 @@ export default async function Home() {
 
         {/* Pravý sidebar */}
         <aside className="hidden lg:block w-64 flex-shrink-0 space-y-8">
+          {/* Kniha dne */}
+          {bookOfTheDay && <BookOfTheDayCard book={bookOfTheDay} />}
+
           {/* Nejčtenější články */}
           {mostReadArticles.length > 0 && (
             <div>

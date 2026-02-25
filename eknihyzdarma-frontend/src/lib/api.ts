@@ -107,6 +107,22 @@ export async function getRandomBooks(excludeSlug: string, limit = 20): Promise<S
   return fetchApi(`/books?filters[slug][$ne]=${excludeSlug}&populate[0]=cover&populate[1]=author&pagination[pageSize]=${limit}&sort=downloads:desc`);
 }
 
+export async function getBookOfTheDay(): Promise<Book | null> {
+  const res = await fetchApi<StrapiResponse<Book[]>>(
+    `/books?populate[0]=cover&populate[1]=author&pagination[pageSize]=100&sort=downloads:desc`,
+    { revalidate: 3600 }
+  );
+  const books = res.data || [];
+  if (books.length === 0) return null;
+
+  // Deterministický výběr podle dne v roce – každý den jiná kniha
+  const now = new Date();
+  const dayOfYear = Math.floor(
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+  );
+  return books[dayOfYear % books.length];
+}
+
 export async function searchBooks(query: string, pageSize = 100): Promise<StrapiResponse<Book[]>> {
   const q = encodeURIComponent(query);
   return fetchApi(
