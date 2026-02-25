@@ -122,7 +122,7 @@ function BookOfTheDayCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
   return (
     <Link href={`/kniha/${book.slug}`} className="block group">
-      <div className="rounded-xl overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 text-white shadow-md">
+      <div className="rounded-xl overflow-hidden bg-linear-to-r from-brand to-brand-purple text-white shadow-md">
         <div className="px-4 pt-3 pb-2 flex items-center gap-1.5">
           <Flame className="h-4 w-4" />
           <span className="text-xs font-bold uppercase tracking-wider opacity-90">Kniha dne</span>
