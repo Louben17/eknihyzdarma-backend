@@ -208,8 +208,10 @@ export default async function Home() {
                 </h2>
               </div>
               <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
-                {featuredBooks.map((book) => (
-                  <BookCard key={book.id} book={book} />
+                {featuredBooks.map((book, i) => (
+                  <div key={book.id} className={i === 5 ? "lg:hidden" : ""}>
+                    <BookCard book={book} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -224,8 +226,10 @@ export default async function Home() {
                 </h2>
               </div>
               <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
-                {popularBooks.map((book) => (
-                  <BookCard key={book.id} book={book} />
+                {popularBooks.map((book, i) => (
+                  <div key={book.id} className={i === 5 ? "lg:hidden" : ""}>
+                    <BookCard book={book} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -245,8 +249,10 @@ export default async function Home() {
                 </h2>
               </div>
               <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
-                {newestBooks.map((book) => (
-                  <BookCard key={book.id} book={book} />
+                {newestBooks.map((book, i) => (
+                  <div key={book.id} className={i === 5 ? "lg:hidden" : ""}>
+                    <BookCard book={book} />
+                  </div>
                 ))}
               </div>
             </div>
