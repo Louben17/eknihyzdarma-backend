@@ -26,6 +26,7 @@ import {
 import type { Book, Author, Banner, Article } from "@/lib/types";
 import { Download, Star, TrendingUp, Clock, Eye, Newspaper } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
+import CategoryMobileFilter from "@/components/category-mobile-filter";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
@@ -177,7 +178,8 @@ export default async function Home() {
             <HeroCarousel slides={carouselSlides} />
           )}
 
-          <div className="flex flex-wrap gap-2">
+          {/* Category pills – desktop only */}
+          <div className="hidden md:flex flex-wrap gap-2">
             <Link href="/">
               <Badge
                 variant="default"
@@ -197,6 +199,9 @@ export default async function Home() {
               </Link>
             ))}
           </div>
+
+          {/* Category filter – mobile only */}
+          <CategoryMobileFilter categories={categories} currentSlug="" />
 
           {featuredBooks.length > 0 && (
             <div>
