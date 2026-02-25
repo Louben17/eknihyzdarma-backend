@@ -182,9 +182,9 @@ export default async function Home() {
             <Link href="/" className="shrink-0">
               <Badge
                 variant="default"
-                className="px-3 py-1.5 cursor-pointer"
+                className="px-3 py-1.5 cursor-pointer [&>svg]:size-5"
               >
-                <HomeIcon className="h-5 w-5" />
+                <HomeIcon />
               </Badge>
             </Link>
             {categories.map((cat) => (

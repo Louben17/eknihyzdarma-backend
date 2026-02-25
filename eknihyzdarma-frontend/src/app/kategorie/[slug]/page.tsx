@@ -242,9 +242,9 @@ export default async function CategoryPage({
             <Link href="/" className="shrink-0">
               <Badge
                 variant="outline"
-                className="px-3 py-1.5 cursor-pointer hover:bg-gray-100"
+                className="px-3 py-1.5 cursor-pointer hover:bg-gray-100 [&>svg]:size-5"
               >
-                <Home className="h-5 w-5" />
+                <Home />
               </Badge>
             </Link>
             {categories.map((cat) => (
