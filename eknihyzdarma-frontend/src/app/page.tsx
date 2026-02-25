@@ -87,14 +87,22 @@ function AuthorCard({ author }: { author: Author }) {
 }
 
 function MostReadArticleItem({ article, rank }: { article: Article; rank: number }) {
+  const coverUrl = getStrapiImageUrl(article.cover);
   return (
     <Link
       href={`/aktuality/${article.slug}`}
-      className="flex items-start gap-2 py-2 group"
+      className="flex items-center gap-2.5 py-2 group"
     >
-      <span className="text-lg font-bold text-gray-200 leading-none w-5 shrink-0 select-none">
+      <span className="text-sm font-bold text-gray-300 leading-none w-4 shrink-0 select-none text-center">
         {rank}
       </span>
+      {coverUrl ? (
+        <div className="relative w-12 h-12 rounded-md overflow-hidden shrink-0 bg-gray-100">
+          <Image src={coverUrl} alt={article.title} fill className="object-cover" sizes="48px" />
+        </div>
+      ) : (
+        <div className="w-12 h-12 rounded-md shrink-0 bg-gray-100" />
+      )}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-700 group-hover:text-brand transition-colors line-clamp-2 leading-snug">
           {article.title}
