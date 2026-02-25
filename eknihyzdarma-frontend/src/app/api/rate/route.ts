@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
       `${STRAPI_URL}/api/ratings/stats/${bookDocumentId}?ip=${encodeURIComponent(ip)}`,
       { cache: "no-store" }
     );
+    if (!res.ok) return NextResponse.json({ average: 0, count: 0, userScore: null });
     const data = await res.json();
     return NextResponse.json(data);
   } catch {
@@ -47,9 +48,10 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ bookDocumentId, score, ipAddress: ip }),
     });
+    if (!res.ok) return NextResponse.json({ error: "Strapi error", status: res.status }, { status: 502 });
     const data = await res.json();
     return NextResponse.json(data);
   } catch {
-    return NextResponse.json({ error: "Chyba serveru" }, { status: 500 });
+    return NextResponse.json({ error: "Chyba serveru" }, { status: 502 });
   }
 }
