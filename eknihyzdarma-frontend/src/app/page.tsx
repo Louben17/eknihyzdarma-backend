@@ -24,7 +24,7 @@ import {
   getStrapiImageUrl,
 } from "@/lib/api";
 import type { Book, Author, Banner, Article } from "@/lib/types";
-import { Download, Star, TrendingUp, Clock, Eye, Newspaper, Home } from "lucide-react";
+import { Download, Star, TrendingUp, Clock, Eye, Newspaper, Home as HomeIcon } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
@@ -184,7 +184,7 @@ export default async function Home() {
                 variant="default"
                 className="px-3 py-1.5 cursor-pointer"
               >
-                <Home className="h-4 w-4" />
+                <HomeIcon className="h-4 w-4" />
               </Badge>
             </Link>
             {categories.map((cat) => (
