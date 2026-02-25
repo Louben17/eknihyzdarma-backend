@@ -17,7 +17,7 @@ function ArticleBanner({ article }: { article: Article }) {
 
   return (
     <Link href={`/aktuality/${article.slug}`} className="group block">
-      <div className="relative rounded-xl overflow-hidden bg-gray-100 h-44">
+      <div className="relative rounded-xl overflow-hidden bg-gray-100 h-56">
         {coverUrl ? (
           <>
             <Image

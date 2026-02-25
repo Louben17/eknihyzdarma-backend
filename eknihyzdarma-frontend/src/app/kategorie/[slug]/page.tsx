@@ -11,7 +11,7 @@ import {
   getStrapiImageUrl,
 } from "@/lib/api";
 import type { Book, Author } from "@/lib/types";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Home } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 const PAGE_SIZE = 25;
@@ -242,9 +242,9 @@ export default async function CategoryPage({
             <Link href="/" className="shrink-0">
               <Badge
                 variant="outline"
-                className="px-4 py-1.5 text-sm cursor-pointer hover:bg-gray-100"
+                className="px-3 py-1.5 cursor-pointer hover:bg-gray-100"
               >
-                Všechny
+                <Home className="h-4 w-4" />
               </Badge>
             </Link>
             {categories.map((cat) => (
