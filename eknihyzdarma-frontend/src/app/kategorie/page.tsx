@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import AppLayout from "@/components/app-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCategories, getBookCountByCategory } from "@/lib/api";
 import { Grid3X3 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Kategorie e-knih",
+  description: "Vyberte si z kategorií: česká literatura, světová klasika, poezie, drama, dětská literatura, biografie a další. Vše ke stažení zdarma.",
+  alternates: { canonical: "/kategorie" },
+};
 
 export default async function CategoriesPage() {
   let categories: { name: string; slug: string }[] = [];

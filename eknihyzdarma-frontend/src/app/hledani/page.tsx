@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import AppLayout from "@/components/app-layout";
 import { searchBooks, getStrapiImageUrl } from "@/lib/api";
+
+export const metadata: Metadata = {
+  title: "Vyhledávání",
+  robots: { index: false, follow: false },
+};
 import type { Book } from "@/lib/types";
 import { Download, BookOpen, Search } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";

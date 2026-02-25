@@ -14,8 +14,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "E-knihy zdarma",
-  description: "Knihovna volně dostupných českých e-knih ke stažení zdarma",
+  metadataBase: new URL("https://eknihyzdarma.cz"),
+  title: {
+    default: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
+    template: "%s | Eknihyzdarma.cz",
+  },
+  description:
+    "Největší česká knihovna volně dostupných e-knih. Přes 3 400 titulů ke stažení zdarma ve formátech EPUB, PDF a MOBI. Česká literatura, světová klasika, poezie a další.",
+  keywords: [
+    "e-knihy zdarma",
+    "epub ke stažení",
+    "pdf knihy zdarma",
+    "česká literatura online",
+    "volně dostupné e-knihy",
+    "knihy pro čtečku",
+    "klasická literatura",
+    "e-knihy epub mobi",
+    "stažení e-knih",
+    "eknihyzdarma",
+  ],
+  authors: [{ name: "Eknihyzdarma.cz" }],
+  creator: "Eknihyzdarma.cz",
+  openGraph: {
+    type: "website",
+    locale: "cs_CZ",
+    siteName: "Eknihyzdarma.cz",
+    title: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
+    description:
+      "Největší česká knihovna volně dostupných e-knih. Přes 3 400 titulů ke stažení zdarma.",
+    images: [{ url: "/logo.png", width: 400, height: 120, alt: "Eknihyzdarma.cz" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
+    description: "Přes 3 400 volně dostupných e-knih ke stažení zdarma.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
 };
 
 export default function RootLayout({

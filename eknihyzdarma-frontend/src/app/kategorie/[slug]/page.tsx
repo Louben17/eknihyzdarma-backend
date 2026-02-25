@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -64,6 +65,24 @@ function AuthorCard({ author }: { author: Author }) {
       </span>
     </Link>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const res = await getCategories();
+  const category = res.data?.find((c) => c.slug === slug);
+  if (!category) return {};
+
+  return {
+    title: `${category.name} – E-knihy zdarma`,
+    description: `E-knihy z kategorie ${category.name} ke stažení zdarma. Procházejte naši sbírku titulů ve formátech EPUB, PDF a MOBI.`,
+    alternates: { canonical: `/kategorie/${slug}` },
+    openGraph: { title: `${category.name} | Eknihyzdarma.cz` },
+  };
 }
 
 export default async function CategoryPage({

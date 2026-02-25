@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import AppLayout from "@/components/app-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Autoři e-knih",
+  description: "Procházejte přes 1 200 autorů v naší knihovně e-knih zdarma. Česká i světová literatura.",
+  alternates: { canonical: "/autori" },
+};
 import { getAuthors, getStrapiImageUrl } from "@/lib/api";
 import type { Author } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";

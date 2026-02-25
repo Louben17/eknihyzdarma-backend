@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -64,6 +65,36 @@ function RelatedBookCard({ book }: { book: Book }) {
       </div>
     </Link>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const res = await getBookBySlug(slug);
+  const book = res.data?.[0];
+  if (!book) return {};
+
+  const author = book.author?.name ?? "";
+  const title = `${book.title}${author ? ` – ${author}` : ""}`;
+  const description = book.description
+    ? `Stáhněte si e-knihu ${book.title}${author ? ` od ${author}` : ""} zdarma. ${book.description.slice(0, 140).trimEnd()}…`
+    : `Stáhněte si e-knihu ${book.title}${author ? ` od ${author}` : ""} zdarma ve formátech EPUB, PDF nebo MOBI.`;
+  const coverUrl = getStrapiImageUrl(book.cover);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/kniha/${slug}` },
+    openGraph: {
+      title,
+      description,
+      type: "book",
+      ...(coverUrl && { images: [{ url: coverUrl, alt: book.title }] }),
+    },
+  };
 }
 
 export default async function BookDetail({

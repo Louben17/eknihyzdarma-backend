@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -33,6 +34,30 @@ function BookCard({ book }: { book: Book }) {
       </div>
     </Link>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const res = await getAuthorBySlug(slug);
+  const author = res.data?.[0];
+  if (!author) return {};
+
+  const photoUrl = getStrapiImageUrl(author.photo);
+  return {
+    title: `${author.name} – E-knihy ke stažení`,
+    description: author.bio
+      ? author.bio.slice(0, 160).trimEnd() + "…"
+      : `Volně dostupné e-knihy od ${author.name} ke stažení zdarma. EPUB, PDF, MOBI.`,
+    alternates: { canonical: `/autori/${slug}` },
+    openGraph: {
+      title: `${author.name} | Eknihyzdarma.cz`,
+      ...(photoUrl && { images: [{ url: photoUrl, alt: author.name }] }),
+    },
+  };
 }
 
 export default async function AuthorDetailPage({

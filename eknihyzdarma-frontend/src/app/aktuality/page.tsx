@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import AppLayout from "@/components/app-layout";
 import { getArticles, getStrapiImageUrl } from "@/lib/api";
 import type { Article } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Aktuality",
+  description: "Novinky a aktuality z knihovny Eknihyzdarma.cz – nové přírůstky, tipy na čtení a zajímavosti ze světa e-knih.",
+  alternates: { canonical: "/aktuality" },
+};
 import { Calendar, Eye, Newspaper } from "lucide-react";
 
 function formatDate(dateStr: string): string {

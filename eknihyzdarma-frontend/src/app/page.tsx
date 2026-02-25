@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import AppLayout from "@/components/app-layout";
+
+export const metadata: Metadata = {
+  title: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
+  description:
+    "Největší česká knihovna volně dostupných e-knih. Přes 3 400 titulů ke stažení zdarma ve formátech EPUB, PDF a MOBI. Česká literatura, světová klasika, poezie a další.",
+  alternates: { canonical: "/" },
+};
 import ArticleBanners from "@/components/article-banners";
 import { Badge } from "@/components/ui/badge";
 import HeroCarousel, { type CarouselSlide } from "@/components/hero-carousel";
