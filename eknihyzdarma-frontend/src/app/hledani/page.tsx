@@ -1,16 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import AppLayout from "@/components/app-layout";
-import { searchBooks } from "@/lib/api";
+import { searchBooks, getStrapiImageUrl } from "@/lib/api";
 import type { Book } from "@/lib/types";
 import { Download, BookOpen, Search } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
+  const coverUrl = getStrapiImageUrl(book.cover);
   return (
     <Link href={`/kniha/${book.slug}`} className="group flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
       <div className="relative w-14 aspect-3/4 rounded-md overflow-hidden bg-gray-100 shrink-0" style={{ containerType: "size" }}>
-        <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+        {coverUrl ? (
+          <Image src={coverUrl} alt={book.title} fill className="object-cover" />
+        ) : (
+          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+        )}
       </div>
       <div className="flex-1 min-w-0 py-0.5">
         <h3 className="text-sm font-medium text-gray-900 leading-snug line-clamp-2 group-hover:text-brand transition-colors">

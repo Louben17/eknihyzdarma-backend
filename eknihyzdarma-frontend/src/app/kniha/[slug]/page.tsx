@@ -36,11 +36,16 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function RelatedBookCard({ book }: { book: Book }) {
+  const coverUrl = getStrapiImageUrl(book.cover);
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
         <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
-          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+          {coverUrl ? (
+            <Image src={coverUrl} alt={book.title} fill className="object-cover" />
+          ) : (
+            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+          )}
         </div>
         <div>
           <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
@@ -107,8 +112,12 @@ export default async function BookDetail({
         <div className="flex flex-col md:flex-row gap-8">
           {/* Cover */}
           <div className="shrink-0">
-            <div className="w-[280px] h-[400px] rounded-lg overflow-hidden" style={{ containerType: "size" }}>
-              <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+            <div className="relative w-70 h-100 rounded-lg overflow-hidden" style={{ containerType: "size" }}>
+              {getStrapiImageUrl(book.cover) ? (
+                <Image src={getStrapiImageUrl(book.cover)!} alt={book.title} fill className="object-cover" />
+              ) : (
+                <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+              )}
             </div>
           </div>
 

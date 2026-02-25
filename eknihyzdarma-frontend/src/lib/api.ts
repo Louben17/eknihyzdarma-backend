@@ -31,8 +31,8 @@ export async function getBookBySlug(slug: string): Promise<StrapiResponse<Book[]
   return fetchApi(`/books?filters[slug][$eq]=${slug}&populate[0]=cover&populate[1]=author&populate[2]=category&populate[3]=ebookFiles`);
 }
 
-export async function getAuthors(): Promise<StrapiResponse<Author[]>> {
-  return fetchApi(`/authors?populate=photo&pagination[pageSize]=100&sort=name:asc`);
+export async function getAuthors(page = 1, pageSize = 50): Promise<StrapiResponse<Author[]>> {
+  return fetchApi(`/authors?populate=photo&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort=name:asc`);
 }
 
 export async function getCategories(): Promise<StrapiResponse<Category[]>> {
@@ -90,6 +90,13 @@ export async function getNewestArticles(limit = 2): Promise<StrapiResponse<Artic
 
 export async function getMostReadArticles(limit = 5): Promise<StrapiResponse<Article[]>> {
   return fetchApi(`/articles?populate=cover&pagination[pageSize]=${limit}&sort=views:desc`);
+}
+
+export async function getBookCountByCategory(categorySlug: string): Promise<number> {
+  const res = await fetchApi<StrapiResponse<Book[]>>(
+    `/books?filters[category][slug][$eq]=${categorySlug}&pagination[pageSize]=1&fields[0]=documentId`
+  );
+  return res.meta?.pagination?.total ?? 0;
 }
 
 export async function getBooksByCategoryExcluding(categorySlug: string, excludeSlug: string, limit = 20): Promise<StrapiResponse<Book[]>> {

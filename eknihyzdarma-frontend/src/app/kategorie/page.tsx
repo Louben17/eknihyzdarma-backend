@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppLayout from "@/components/app-layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { getCategories, getBooks } from "@/lib/api";
+import { getCategories, getBookCountByCategory } from "@/lib/api";
 import { Grid3X3 } from "lucide-react";
 
 export default async function CategoriesPage() {
@@ -9,18 +9,14 @@ export default async function CategoriesPage() {
   let bookCounts: Record<string, number> = {};
 
   try {
-    const [catsRes, booksRes] = await Promise.all([
-      getCategories(),
-      getBooks(1, 300),
-    ]);
+    const catsRes = await getCategories();
     categories = catsRes.data || [];
-    const books = booksRes.data || [];
-    for (const book of books) {
-      if (book.category?.slug) {
-        bookCounts[book.category.slug] =
-          (bookCounts[book.category.slug] || 0) + 1;
-      }
-    }
+    const counts = await Promise.all(
+      categories.map((cat) => getBookCountByCategory(cat.slug))
+    );
+    categories.forEach((cat, i) => {
+      bookCounts[cat.slug] = counts[i];
+    });
   } catch (error) {
     console.error("Failed to fetch categories:", error);
   }

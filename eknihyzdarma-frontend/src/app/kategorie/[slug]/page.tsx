@@ -14,11 +14,16 @@ import { ArrowLeft } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 
 function BookCard({ book }: { book: Book }) {
+  const coverUrl = getStrapiImageUrl(book.cover);
   return (
     <Link href={`/kniha/${book.slug}`} className="group">
       <div className="space-y-2">
         <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-gray-100" style={{ containerType: "size" }}>
-          <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+          {coverUrl ? (
+            <Image src={coverUrl} alt={book.title} fill className="object-cover" />
+          ) : (
+            <BookCoverPlaceholder title={book.title} author={book.author?.name} />
+          )}
         </div>
         <div>
           <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 group-hover:text-brand transition-colors">
