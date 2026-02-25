@@ -1,5 +1,3 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://eknihyzdarma-backend-1.onrender.com';
-
 export interface AuthUser {
   id: number;
   documentId: string;
@@ -13,44 +11,41 @@ export interface AuthResponse {
 }
 
 export async function strapiLogin(email: string, password: string): Promise<AuthResponse> {
-  const res = await fetch(`${STRAPI_URL}/api/auth/local`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ identifier: email, password }),
   });
 
+  const data = await res.json();
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || 'Přihlášení se nezdařilo');
+    throw new Error(data?.error?.message || "Přihlášení se nezdařilo");
   }
-
-  return res.json();
+  return data;
 }
 
 export async function strapiRegister(email: string, password: string): Promise<AuthResponse> {
   // Strapi vyžaduje username – použijeme část emailu před @
-  const username = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_');
+  const username = email.split("@")[0].replace(/[^a-zA-Z0-9_]/g, "_");
 
-  const res = await fetch(`${STRAPI_URL}/api/auth/local/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const res = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password }),
   });
 
+  const data = await res.json();
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || 'Registrace se nezdařila');
+    throw new Error(data?.error?.message || "Registrace se nezdařila");
   }
-
-  return res.json();
+  return data;
 }
 
 export async function strapiMe(token: string): Promise<AuthUser> {
-  const res = await fetch(`${STRAPI_URL}/api/users/me`, {
+  const res = await fetch("/api/auth/me", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error('Token je neplatný');
-
+  if (!res.ok) throw new Error("Token je neplatný");
   return res.json();
 }
