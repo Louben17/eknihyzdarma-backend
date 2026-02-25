@@ -14,6 +14,7 @@ import {
 import DownloadButton from "@/components/download-button";
 import FavoriteButton from "@/components/favorite-button";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
+import StarRating from "@/components/star-rating";
 import { ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
 
@@ -206,6 +207,8 @@ export default async function BookDetail({
                 </span>
               )}
             </div>
+
+            <StarRating bookDocumentId={book.documentId} />
 
             {book.description && (
               <p className="text-gray-600 leading-relaxed whitespace-pre-line">
