@@ -26,7 +26,6 @@ import {
 import type { Book, Author, Banner, Article } from "@/lib/types";
 import { Download, Star, TrendingUp, Clock, Eye, Newspaper } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
-import CategoryMobileFilter from "@/components/category-mobile-filter";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
@@ -178,9 +177,9 @@ export default async function Home() {
             <HeroCarousel slides={carouselSlides} />
           )}
 
-          {/* Category pills – desktop only */}
-          <div className="hidden md:flex flex-wrap gap-2">
-            <Link href="/">
+          {/* Category pills – scrollovatelný karusel na mobilu, wrap na desktopu */}
+          <div className="flex flex-nowrap overflow-x-auto gap-2 scrollbar-hide md:flex-wrap">
+            <Link href="/" className="shrink-0">
               <Badge
                 variant="default"
                 className="px-4 py-1.5 text-sm cursor-pointer"
@@ -189,7 +188,7 @@ export default async function Home() {
               </Badge>
             </Link>
             {categories.map((cat) => (
-              <Link key={cat.slug} href={`/kategorie/${cat.slug}`}>
+              <Link key={cat.slug} href={`/kategorie/${cat.slug}`} className="shrink-0">
                 <Badge
                   variant="outline"
                   className="px-4 py-1.5 text-sm cursor-pointer hover:bg-gray-100"
@@ -199,9 +198,6 @@ export default async function Home() {
               </Link>
             ))}
           </div>
-
-          {/* Category filter – mobile only */}
-          <CategoryMobileFilter categories={categories} currentSlug="" />
 
           {featuredBooks.length > 0 && (
             <div>
