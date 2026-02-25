@@ -11,6 +11,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
+  loginWithToken: (jwt: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -53,6 +54,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(userData);
   }, []);
 
+  const loginWithToken = useCallback(async (jwt: string) => {
+    const userData = await strapiMe(jwt);
+    localStorage.setItem(JWT_KEY, jwt);
+    setToken(jwt);
+    setUser(userData);
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem(JWT_KEY);
     setToken(null);
@@ -60,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, loginWithToken, logout }}>
       {children}
     </AuthContext.Provider>
   );
