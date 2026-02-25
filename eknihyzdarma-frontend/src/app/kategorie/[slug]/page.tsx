@@ -244,7 +244,7 @@ export default async function CategoryPage({
                 variant="outline"
                 className="px-3 py-1.5 cursor-pointer hover:bg-gray-100"
               >
-                <Home className="h-4 w-4" />
+                <Home className="h-5 w-5" />
               </Badge>
             </Link>
             {categories.map((cat) => (

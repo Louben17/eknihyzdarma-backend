@@ -184,7 +184,7 @@ export default async function Home() {
                 variant="default"
                 className="px-3 py-1.5 cursor-pointer"
               >
-                <HomeIcon className="h-4 w-4" />
+                <HomeIcon className="h-5 w-5" />
               </Badge>
             </Link>
             {categories.map((cat) => (
