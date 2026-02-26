@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Send, FileText, Truck, ShieldCheck, Phone } from "lucide-react";
+import { Mail, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 const quickLinks = [
@@ -13,10 +13,7 @@ const quickLinks = [
 ];
 
 const legalLinks = [
-  { href: "/obchodni-podminky", label: "Obchodní podmínky", icon: FileText },
-  { href: "/zpusob-dodani", label: "Způsob dodání zboží", icon: Truck },
-  { href: "/reklamacni-rad", label: "Reklamační řád", icon: ShieldCheck },
-  { href: "/kontakty", label: "Kontakty", icon: Phone },
+  { href: "/ochrana-soukromi", label: "Ochrana soukromí", icon: ShieldCheck },
 ];
 
 export default function Footer() {
@@ -184,8 +181,7 @@ export default function Footer() {
         </p>
         <nav className="flex items-center gap-4 flex-wrap justify-center">
           {[
-            { href: "/kontakty", label: "Kontakty" },
-            { href: "/zpusob-dodani", label: "Způsob dodání" },
+            { href: "/ochrana-soukromi", label: "Ochrana soukromí" },
             { href: "/mapa-stranek", label: "Mapa stránek" },
           ].map((link) => (
             <Link
