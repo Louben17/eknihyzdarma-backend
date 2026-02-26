@@ -14,15 +14,15 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: "6px",
+          borderRadius: "50%",
         }}
       >
         <span
           style={{
             color: "white",
             fontSize: 13,
-            fontWeight: 800,
-            letterSpacing: "-0.5px",
+            fontWeight: 900,
+            letterSpacing: "-1px",
           }}
         >
           EZ
