@@ -15,7 +15,7 @@ export default function EditInStrapiButton({ documentId }: EditInStrapiButtonPro
 
   if (!user || !ADMIN_EMAIL || user.email !== ADMIN_EMAIL) return null;
 
-  const href = `${STRAPI_ADMIN_URL}/admin/content-manager/collection-types/api::kniha.kniha/${documentId}`;
+  const href = `${STRAPI_ADMIN_URL}/admin/content-manager/collection-types/api::book.book/${documentId}`;
 
   return (
     <a
