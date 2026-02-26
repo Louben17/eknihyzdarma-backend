@@ -26,7 +26,13 @@ function GoogleCallbackInner() {
       return;
     }
 
-    loginWithToken(accessToken)
+    // Vyměn Google token za Strapi JWT
+    fetch(`/api/auth/google/callback?access_token=${encodeURIComponent(accessToken)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.jwt) throw new Error("No JWT");
+        return loginWithToken(data.jwt);
+      })
       .then(() => router.push("/"))
       .catch(() => {
         setError("Přihlášení se nezdařilo. Zkuste to znovu.");
