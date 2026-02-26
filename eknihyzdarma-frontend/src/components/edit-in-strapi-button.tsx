@@ -3,7 +3,7 @@
 import { useAuth } from "@/context/auth-context";
 import { Pencil } from "lucide-react";
 
-const STRAPI_ADMIN_URL = process.env.NEXT_PUBLIC_STRAPI_ADMIN_URL || "http://46.225.238.52:1337";
+const STRAPI_ADMIN_URL = process.env.NEXT_PUBLIC_STRAPI_ADMIN_URL || "https://api.eknihyzdarma.cz";
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
 interface EditInStrapiButtonProps {
