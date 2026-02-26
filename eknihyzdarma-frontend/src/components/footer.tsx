@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Send, ShieldCheck } from "lucide-react";
+import { Mail, Send } from "lucide-react";
 import { useState } from "react";
 
 const quickLinks = [
@@ -10,10 +10,6 @@ const quickLinks = [
   { href: "/kategorie", label: "Kategorie" },
   { href: "/autori", label: "Autoři" },
   { href: "/aktuality", label: "Aktuality" },
-];
-
-const legalLinks = [
-  { href: "/ochrana-soukromi", label: "Ochrana soukromí", icon: ShieldCheck },
 ];
 
 export default function Footer() {
@@ -51,7 +47,7 @@ export default function Footer() {
     <footer className="bg-slate-900 text-slate-300 mt-auto">
       {/* Hlavní sekce */}
       <div className="max-w-none px-4 sm:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
           {/* Branding */}
           <div className="space-y-4">
@@ -93,29 +89,6 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-            </ul>
-          </div>
-
-          {/* Právní */}
-          <div className="space-y-4">
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider">
-              Informace
-            </h3>
-            <ul className="space-y-2.5">
-              {legalLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2 group"
-                    >
-                      <Icon className="h-3.5 w-3.5 text-slate-500 group-hover:text-brand transition-colors" />
-                      {link.label}
-                    </Link>
-                  </li>
-                );
-              })}
             </ul>
           </div>
 
