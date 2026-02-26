@@ -16,6 +16,7 @@ import FavoriteButton from "@/components/favorite-button";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 import StarRating from "@/components/star-rating";
 import AdSenseAd from "@/components/adsense-ad";
+import EditInStrapiButton from "@/components/edit-in-strapi-button";
 import { ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
 
@@ -161,7 +162,10 @@ export default async function BookDetail({
                 <h1 className="text-3xl font-bold text-gray-900 flex-1">
                   {book.title}
                 </h1>
-                <FavoriteButton documentId={book.documentId} />
+                <div className="flex items-center gap-2 shrink-0">
+                  <EditInStrapiButton documentId={book.documentId} />
+                  <FavoriteButton documentId={book.documentId} />
+                </div>
               </div>
 
               {book.author && (
