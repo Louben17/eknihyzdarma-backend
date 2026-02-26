@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://eknihyzdarma.cz"),
   title: {
-    default: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
+    default: "Eknihyzdarma.cz | eknihy zdarma & eknihy pro Vaše čtečky",
     template: "%s | Eknihyzdarma.cz",
   },
   description:
-    "Největší česká knihovna volně dostupných e-knih. Přes 3 400 titulů ke stažení zdarma ve formátech EPUB, PDF a MOBI. Česká literatura, světová klasika, poezie a další.",
+    "Nejjednoduší stahování eknih do vašich čteček. Vše co potřebujete vědět o elektronickém čtení. E-knihy zdarma.",
   keywords: [
     "e-knihy zdarma",
     "epub ke stažení",
@@ -41,15 +41,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "cs_CZ",
     siteName: "Eknihyzdarma.cz",
-    title: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
+    title: "Eknihyzdarma.cz | eknihy zdarma & eknihy pro Vaše čtečky",
     description:
-      "Největší česká knihovna volně dostupných e-knih. Přes 3 400 titulů ke stažení zdarma.",
+      "Nejjednoduší stahování eknih do vašich čteček. Vše co potřebujete vědět o elektronickém čtení. E-knihy zdarma.",
     images: [{ url: "/logo.png", width: 400, height: 120, alt: "Eknihyzdarma.cz" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eknihyzdarma.cz – E-knihy ke stažení zdarma",
-    description: "Přes 3 400 volně dostupných e-knih ke stažení zdarma.",
+    title: "Eknihyzdarma.cz | eknihy zdarma & eknihy pro Vaše čtečky",
+    description: "Nejjednoduší stahování eknih do vašich čteček. E-knihy zdarma.",
   },
   robots: {
     index: true,
