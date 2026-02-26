@@ -15,6 +15,7 @@ import DownloadButton from "@/components/download-button";
 import FavoriteButton from "@/components/favorite-button";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
 import StarRating from "@/components/star-rating";
+import AdSenseAd from "@/components/adsense-ad";
 import { ArrowLeft, Download } from "lucide-react";
 import type { Book } from "@/lib/types";
 
@@ -290,6 +291,10 @@ export default async function BookDetail({
             </div>
           </div>
         )}
+
+        {/* Banner dole v detailu knihy */}
+        {/* Slot ID: zkopíruj z AdSense → Reklamy → Podle reklamní jednotky */}
+        <AdSenseAd slot="9968245811" style={{ minHeight: "90px" }} />
       </div>
     </AppLayout>
   );

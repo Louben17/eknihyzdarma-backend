@@ -26,6 +26,7 @@ import {
 import type { Book, Author, Banner, Article } from "@/lib/types";
 import { Download, Star, TrendingUp, Clock, Eye, Newspaper, Home as HomeIcon, Flame } from "lucide-react";
 import BookCoverPlaceholder from "@/components/book-cover-placeholder";
+import AdSenseAd from "@/components/adsense-ad";
 
 function BookCard({ book }: { book: Book }) {
   const coverUrl = getStrapiImageUrl(book.cover);
@@ -311,6 +312,10 @@ export default async function Home() {
               </div>
             </div>
           )}
+
+          {/* Banner pod sekcí Nejnovější */}
+          {/* Slot ID: zkopíruj z AdSense → Reklamy → Podle reklamní jednotky */}
+          <AdSenseAd slot="9968245811" style={{ minHeight: "90px" }} />
         </div>
 
         {/* Pravý sidebar */}

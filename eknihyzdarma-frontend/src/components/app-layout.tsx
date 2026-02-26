@@ -7,6 +7,7 @@ import { Search, Home, Users, Grid3X3, Newspaper, X, Menu, Heart, BookMarked, Lo
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/footer";
+import AdSenseAd from "@/components/adsense-ad";
 import { useState, useEffect, Suspense } from "react";
 import { useAuth } from "@/context/auth-context";
 
@@ -135,6 +136,12 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
           </nav>
         </>
       )}
+
+      {/* Reklama v levém sidebaru */}
+      <div className="mt-6">
+        {/* Slot ID: zkopíruj z AdSense → Reklamy → Podle reklamní jednotky */}
+        <AdSenseAd slot="4696242414" />
+      </div>
 
       {/* Uživatel / přihlášení – vždy dole */}
       <div className="mt-auto pt-4 border-t border-gray-100">
