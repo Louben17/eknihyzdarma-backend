@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   documentId: string;
-  epubUrl: string;
+  label: string;
+  url: string;
 }
 
-export default function GutenbergDownloadButton({ documentId, epubUrl }: Props) {
+export default function GutenbergDownloadButton({ documentId, label, url }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = async () => {
@@ -23,14 +24,14 @@ export default function GutenbergDownloadButton({ documentId, epubUrl }: Props) 
     } catch {
       // Tracking neblokuje download
     }
-    window.open(epubUrl, "_blank", "noopener,noreferrer");
+    window.open(url, "_blank", "noopener,noreferrer");
     setLoading(false);
   };
 
   return (
-    <Button onClick={handleDownload} disabled={loading} className="gap-2">
+    <Button variant="default" className="gap-2" onClick={handleDownload} disabled={loading}>
       <Download className="h-4 w-4" />
-      {loading ? "Otevírám..." : "Stáhnout EPUB"}
+      {loading ? "Otevírám..." : label}
     </Button>
   );
 }

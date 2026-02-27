@@ -32,6 +32,9 @@
     "epubUrl": {
       "type": "string"
     },
+    "mobiUrl": {
+      "type": "string"
+    },
     "gutenbergId": {
       "type": "integer",
       "unique": true,

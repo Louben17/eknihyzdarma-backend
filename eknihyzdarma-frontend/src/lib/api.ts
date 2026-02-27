@@ -146,4 +146,16 @@ export async function getGutenbergBookByDocumentId(documentId: string): Promise<
   return fetchApi(`/gutenberg-books/${documentId}`);
 }
 
+export async function getGutenbergBooksByCategoryExcluding(category: string, excludeSlug: string, limit = 10): Promise<StrapiResponse<GutenbergBook[]>> {
+  return fetchApi(`/gutenberg-books?filters[category][$eq]=${encodeURIComponent(category)}&filters[slug][$ne]=${excludeSlug}&pagination[pageSize]=${limit}&sort=gutenbergDownloads:desc`);
+}
+
+export async function searchGutenbergBooks(query: string, pageSize = 50): Promise<StrapiResponse<GutenbergBook[]>> {
+  const q = encodeURIComponent(query);
+  return fetchApi(
+    `/gutenberg-books?filters[$or][0][title][$containsi]=${q}&filters[$or][1][author][$containsi]=${q}&pagination[pageSize]=${pageSize}&sort=gutenbergDownloads:desc`,
+    { revalidate: 0 }
+  );
+}
+
 export { STRAPI_URL };

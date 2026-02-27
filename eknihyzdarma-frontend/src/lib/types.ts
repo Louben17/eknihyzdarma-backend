@@ -91,6 +91,7 @@ export interface GutenbergBook {
   author?: string;
   coverUrl?: string;
   epubUrl?: string;
+  mobiUrl?: string;
   gutenbergId: number;
   subjects?: string[];
   category?: string;

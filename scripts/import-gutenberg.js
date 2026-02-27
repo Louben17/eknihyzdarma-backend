@@ -50,6 +50,14 @@ function getEpubUrl(formats = {}) {
   );
 }
 
+// Získej MOBI/Kindle URL z formátů
+function getMobiUrl(formats = {}) {
+  return (
+    formats['application/x-mobipocket-ebook'] ||
+    null
+  );
+}
+
 // Získej cover URL
 function getCoverUrl(formats = {}) {
   return formats['image/jpeg'] || null;
@@ -141,6 +149,7 @@ async function main() {
       }
 
       const coverUrl = getCoverUrl(book.formats);
+      const mobiUrl = getMobiUrl(book.formats);
       const category = mapToCategory(book.subjects, book.bookshelves);
 
       const bookData = {
@@ -151,6 +160,7 @@ async function main() {
         description: truncate(book.subjects?.join(', '), 500) || null,
         coverUrl: coverUrl,
         epubUrl: epubUrl,
+        mobiUrl: mobiUrl,
         subjects: book.subjects || [],
         category: category,
         gutenbergDownloads: book.download_count || 0,
