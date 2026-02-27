@@ -1,21 +1,23 @@
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreController('api::gutenberg-book.gutenberg-book', ({ strapi }) => ({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const UID = 'api::gutenberg-book.gutenberg-book' as any;
+
+export default factories.createCoreController(UID, ({ strapi }) => ({
   async incrementDownload(ctx) {
     const { id } = ctx.params;
 
-    const book = await strapi.documents('api::gutenberg-book.gutenberg-book').findOne({
-      documentId: id,
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const book = await (strapi.documents(UID) as any).findOne({ documentId: id });
 
     if (!book) {
       return ctx.notFound('Kniha nenalezena');
     }
 
-    await strapi.documents('api::gutenberg-book.gutenberg-book').update({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (strapi.documents(UID) as any).update({
       documentId: id,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data: { downloads: (book.downloads || 0) + 1 } as any,
+      data: { downloads: (book.downloads || 0) + 1 },
     });
 
     ctx.body = { success: true };

@@ -1,3 +1,4 @@
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreService('api::gutenberg-book.gutenberg-book');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default factories.createCoreService('api::gutenberg-book.gutenberg-book' as any);
