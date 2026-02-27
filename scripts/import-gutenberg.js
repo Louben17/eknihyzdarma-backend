@@ -152,8 +152,10 @@ async function main() {
       const mobiUrl = getMobiUrl(book.formats);
       const category = mapToCategory(book.subjects, book.bookshelves);
 
+      const safeTitle = book.title.length > 250 ? book.title.slice(0, 247) + '...' : book.title;
+
       const bookData = {
-        title: book.title,
+        title: safeTitle,
         slug: slugify(book.title, book.id),
         author: authorName,
         gutenbergId: book.id,
