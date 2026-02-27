@@ -131,9 +131,29 @@ export default async function BookDetail({
   const relatedBooks = shuffle(relatedPool).slice(0, 5);
 
   const authorPhotoUrl = getStrapiImageUrl(book.author?.photo);
+  const coverUrl = getStrapiImageUrl(book.cover);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: book.title,
+    ...(book.author?.name && { author: { "@type": "Person", name: book.author.name } }),
+    inLanguage: "cs",
+    ...(book.category?.name && { genre: book.category.name }),
+    ...(book.description && { description: book.description.slice(0, 500) }),
+    ...(coverUrl && { image: coverUrl }),
+    url: `https://eknihyzdarma.cz/kniha/${slug}`,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "CZK",
+      availability: "https://schema.org/InStock",
+    },
+  };
 
   return (
     <AppLayout>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-4xl mx-auto space-y-10">
         <Link
           href="/"

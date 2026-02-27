@@ -105,8 +105,27 @@ export default async function GutenbergBookDetailPage({ params }: PageProps) {
     }
   } catch {}
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: book.title,
+    ...(book.author && { author: { "@type": "Person", name: book.author } }),
+    inLanguage: "en",
+    ...(book.category && { genre: book.category }),
+    ...(book.description && { description: book.description.slice(0, 500) }),
+    ...(book.coverUrl && { image: book.coverUrl }),
+    url: `https://eknihyzdarma.cz/anglicke-knihy/${book.slug || book.documentId}`,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+  };
+
   return (
     <AppLayout>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-4xl mx-auto space-y-10">
         {/* Zpět */}
         <Link href="/anglicke-knihy" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900">
