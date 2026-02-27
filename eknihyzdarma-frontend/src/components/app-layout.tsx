@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, Home, Users, Grid3X3, Newspaper, X, Menu, Heart, BookMarked, LogIn, User, LogOut, HelpCircle } from "lucide-react";
+import { UKFlagIcon } from "@/components/uk-flag-icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/footer";
@@ -17,7 +18,7 @@ const navItems = [
   { href: "/autori", label: "Autoři", icon: Users },
   { href: "/aktuality", label: "Aktuality", icon: Newspaper },
   { href: "/jak-cist-eknihy", label: "Jak číst?", icon: HelpCircle },
-  { href: "/anglicke-knihy", label: "🇬🇧 English Books", icon: null },
+  { href: "/anglicke-knihy", label: "English Books", icon: UKFlagIcon },
 ];
 
 function SearchBar() {

@@ -12,6 +12,7 @@ import {
 import GutenbergDownloadButton from "@/components/gutenberg-download-button";
 import AdSenseAd from "@/components/adsense-ad";
 import { ArrowLeft, Download } from "lucide-react";
+import { UKFlagIcon } from "@/components/uk-flag-icon";
 import type { GutenbergBook } from "@/lib/types";
 
 interface PageProps {
@@ -139,7 +140,7 @@ export default async function GutenbergBookDetailPage({ params }: PageProps) {
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-xl">🇬🇧</span>
+              <UKFlagIcon className="h-6 w-6" />
               {book.category && (
                 <Link href={`/anglicke-knihy?kategorie=${encodeURIComponent(book.category)}`}>
                   <Badge variant="secondary" className="cursor-pointer hover:bg-gray-200">
