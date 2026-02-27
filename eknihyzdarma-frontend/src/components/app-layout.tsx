@@ -15,6 +15,7 @@ const navItems = [
   { href: "/", label: "Knihy", icon: Home },
   { href: "/kategorie", label: "Kategorie", icon: Grid3X3 },
   { href: "/autori", label: "Autoři", icon: Users },
+  { href: "/anglicke-knihy", label: "🇬🇧 English Books", icon: null },
   { href: "/aktuality", label: "Aktuality", icon: Newspaper },
   { href: "/jak-cist-eknihy", label: "Jak číst?", icon: HelpCircle },
 ];
@@ -105,7 +106,7 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
                 variant={isActive ? "default" : "ghost"}
                 className="w-full justify-start"
               >
-                <Icon className="mr-2 h-4 w-4" />
+                {Icon && <Icon className="mr-2 h-4 w-4" />}
                 {item.label}
               </Button>
             </Link>

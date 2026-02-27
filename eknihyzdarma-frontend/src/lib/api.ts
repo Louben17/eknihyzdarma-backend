@@ -1,4 +1,4 @@
-import type { Book, Author, Category, Banner, Article, StrapiResponse } from './types';
+import type { Book, Author, Category, Banner, Article, GutenbergBook, StrapiResponse } from './types';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://eknihyzdarma-backend-1.onrender.com';
 
@@ -129,6 +129,17 @@ export async function searchBooks(query: string, pageSize = 100): Promise<Strapi
     `/books?filters[$or][0][title][$containsi]=${q}&filters[$or][1][description][$containsi]=${q}&filters[$or][2][author][name][$containsi]=${q}&populate[0]=cover&populate[1]=author&populate[2]=category&pagination[pageSize]=${pageSize}&sort=downloads:desc`,
     { revalidate: 0 }
   );
+}
+
+// ── Gutenberg Books ──────────────────────────────────────────────────────────
+
+export async function getGutenbergBooks(page = 1, pageSize = 25, category?: string): Promise<StrapiResponse<GutenbergBook[]>> {
+  const categoryFilter = category ? `&filters[category][$eq]=${encodeURIComponent(category)}` : '';
+  return fetchApi(`/gutenberg-books?pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort=gutenbergDownloads:desc${categoryFilter}`);
+}
+
+export async function getGutenbergBookBySlug(slug: string): Promise<StrapiResponse<GutenbergBook[]>> {
+  return fetchApi(`/gutenberg-books?filters[slug][$eq]=${slug}`);
 }
 
 export { STRAPI_URL };

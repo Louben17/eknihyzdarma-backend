@@ -82,6 +82,22 @@ export interface Article {
   createdAt: string;
 }
 
+export interface GutenbergBook {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  description?: string;
+  author?: string;
+  coverUrl?: string;
+  epubUrl?: string;
+  gutenbergId: number;
+  subjects?: string[];
+  category?: string;
+  gutenbergDownloads: number;
+  downloads: number;
+}
+
 export interface StrapiResponse<T> {
   data: T;
   meta: {
