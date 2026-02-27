@@ -15,9 +15,9 @@ const navItems = [
   { href: "/", label: "Knihy", icon: Home },
   { href: "/kategorie", label: "Kategorie", icon: Grid3X3 },
   { href: "/autori", label: "Autoři", icon: Users },
-  { href: "/anglicke-knihy", label: "🇬🇧 English Books", icon: null },
   { href: "/aktuality", label: "Aktuality", icon: Newspaper },
   { href: "/jak-cist-eknihy", label: "Jak číst?", icon: HelpCircle },
+  { href: "/anglicke-knihy", label: "🇬🇧 English Books", icon: null },
 ];
 
 function SearchBar() {
