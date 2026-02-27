@@ -4,11 +4,14 @@
  * Použití:
  *   STRAPI_URL=http://localhost:1337 STRAPI_TOKEN=xxx node scripts/import-gutenberg.js --limit 1
  *   STRAPI_URL=http://localhost:1337 STRAPI_TOKEN=xxx node scripts/import-gutenberg.js --limit 10000
+ *   STRAPI_URL=http://localhost:1337 STRAPI_TOKEN=xxx node scripts/import-gutenberg.js --limit 200 --sort descending
+ *
+ * --sort popular     Nejpopulárnější první (výchozí, pro hromadný import)
+ * --sort descending  Nejnovější první (pro weekly sync)
  */
 
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
-const GUTENDEX_API = 'https://gutendex.com/books/?languages=en&sort=popular';
 
 if (!STRAPI_TOKEN) {
   console.error('❌ Chybí STRAPI_TOKEN env variable');
@@ -18,7 +21,13 @@ if (!STRAPI_TOKEN) {
 // Parsuj --limit argument
 const limitArg = process.argv.indexOf('--limit');
 const LIMIT = limitArg !== -1 ? parseInt(process.argv[limitArg + 1], 10) : 100;
-console.log(`📚 Importuji max ${LIMIT} knih z Project Gutenberg...`);
+
+// Parsuj --sort argument
+const sortArg = process.argv.indexOf('--sort');
+const SORT = sortArg !== -1 ? process.argv[sortArg + 1] : 'popular';
+const GUTENDEX_API = `https://gutendex.com/books/?languages=en&sort=${SORT}`;
+
+console.log(`📚 Importuji max ${LIMIT} knih z Project Gutenberg (řazení: ${SORT})...`);
 
 // Mapování subjects/bookshelves → zjednodušená kategorie
 function mapToCategory(subjects = [], bookshelves = []) {
