@@ -142,4 +142,8 @@ export async function getGutenbergBookBySlug(slug: string): Promise<StrapiRespon
   return fetchApi(`/gutenberg-books?filters[slug][$eq]=${slug}`);
 }
 
+export async function getGutenbergBookByDocumentId(documentId: string): Promise<StrapiResponse<GutenbergBook>> {
+  return fetchApi(`/gutenberg-books/${documentId}`);
+}
+
 export { STRAPI_URL };

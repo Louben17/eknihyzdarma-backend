@@ -61,6 +61,21 @@ function truncate(text, max = 1000) {
   return text.length > max ? text.slice(0, max) + '...' : text;
 }
 
+// Generuje slug z titulu + gutenbergId (pro unikátnost)
+function slugify(text, id) {
+  const base = text
+    .toString()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80);
+  return `${base}-${id}`;
+}
+
 // Čekání (throttling)
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -130,6 +145,7 @@ async function main() {
 
       const bookData = {
         title: book.title,
+        slug: slugify(book.title, book.id),
         author: authorName,
         gutenbergId: book.id,
         description: truncate(book.subjects?.join(', '), 500) || null,

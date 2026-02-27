@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppLayout from "@/components/app-layout";
 import { Badge } from "@/components/ui/badge";
-import { getGutenbergBookBySlug } from "@/lib/api";
+import { getGutenbergBookBySlug, getGutenbergBookByDocumentId } from "@/lib/api";
 import GutenbergDownloadButton from "@/components/gutenberg-download-button";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 
@@ -12,11 +12,23 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+async function findBook(id: string) {
+  // Zkus slug nejdřív, pak documentId (fallback pro staré záznamy bez slugu)
+  try {
+    const res = await getGutenbergBookBySlug(id);
+    if (res.data?.[0]) return res.data[0];
+  } catch { /* pokračuj */ }
+  try {
+    const res = await getGutenbergBookByDocumentId(id);
+    if (res.data) return res.data;
+  } catch { /* pokračuj */ }
+  return null;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const res = await getGutenbergBookBySlug(slug);
-    const book = res.data?.[0];
+    const book = await findBook(slug);
     if (!book) return { title: "Kniha nenalezena" };
     return {
       title: `${book.title} – ${book.author || "Unknown Author"} | Anglické e-knihy`,
@@ -30,14 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function GutenbergBookDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  let book;
-  try {
-    const res = await getGutenbergBookBySlug(slug);
-    book = res.data?.[0];
-  } catch {
-    notFound();
-  }
-
+  const book = await findBook(slug);
   if (!book) notFound();
 
   const gutenbergUrl = `https://www.gutenberg.org/ebooks/${book.gutenbergId}`;

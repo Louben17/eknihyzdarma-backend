@@ -96,7 +96,7 @@ export default async function AnglickeKnihyPage({ searchParams }: PageProps) {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {books.map((book) => (
-              <Link key={book.documentId} href={`/anglicke-knihy/${book.slug}`} className="group">
+              <Link key={book.documentId} href={`/anglicke-knihy/${book.slug || book.documentId}`} className="group">
                 <div className="space-y-2">
                   {/* Cover */}
                   <div className="relative aspect-[2/3] bg-gray-100 rounded-md overflow-hidden">
