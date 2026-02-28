@@ -492,7 +492,7 @@ def find_or_create_author(name: str, dry_run: bool = False) -> Optional[str]:
         print(f"    ⚠ Autor lookup '{name}': {e}", flush=True)
         return None
     try:
-        res = strapi_post("/api/authors", {"data": {"name": name, "slug": slugify(name)}})
+        res = strapi_post("/api/authors", {"data": {"name": name, "slug": slugify(name), "publishedAt": now_iso()}})
         doc_id = res["data"]["documentId"]
         _author_cache[name] = doc_id
         print(f"    ✓ Autor vytvořen: {name}", flush=True)
@@ -519,7 +519,7 @@ def find_or_create_category(name: str, dry_run: bool = False) -> Optional[str]:
     except Exception:
         pass
     try:
-        res = strapi_post("/api/categories", {"data": {"name": name, "slug": slugify(name)}})
+        res = strapi_post("/api/categories", {"data": {"name": name, "slug": slugify(name), "publishedAt": now_iso()}})
         doc_id = res["data"]["documentId"]
         _category_cache[name] = doc_id
         print(f"    ✓ Kategorie vytvořena: {name}", flush=True)
